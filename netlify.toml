@@ -1,3 +1,7 @@
 [[edge_functions]]
   path = "/"
   function = "og-inject"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"

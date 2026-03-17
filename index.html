@@ -1329,52 +1329,8 @@
     </div>
   </header>
 
-  <!-- ══════════════════════════════ HERO — NOW PLAYING -->
-  <section id="hero" class="hero">
-
-    <div class="hero-video-wrap">
-      <iframe
-        src="https://www.youtube.com/embed/IhgcUArO3Uo?autoplay=1&mute=1&loop=1&playlist=IhgcUArO3Uo&controls=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1"
-        allow="autoplay; encrypted-media"
-        title="The Bride — Official Trailer"
-      ></iframe>
-    </div>
-
-    <div class="hero-overlay"></div>
-
-    <div class="hero-content page-wrap">
-
-      <div class="hero-eyebrow">
-        <span class="badge-now">Now Playing</span>
-        <div class="hero-tags">
-          <span class="hero-tag">14A</span>
-          <span class="hero-tag">126 min</span>
-        </div>
-      </div>
-
-      <h1 class="hero-title">The Bride</h1>
-
-      <div class="hero-date-block">
-        <span class="hero-date-range">MAR 13–19</span>
-        <span class="hero-date-time">8:00pm nightly</span>
-      </div>
-
-      <p class="hero-desc">Period romantic horror starring Jessie Buckley and Jake Gyllenhaal.</p>
-
-      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
-        <button class="btn-trailer-hero" onclick="openTrailer('https://www.youtube.com/embed/IhgcUArO3Uo')">
-          ▶&nbsp; Watch Trailer
-        </button>
-        <div class="share-wrap">
-          <button class="btn-share btn-share-hero" onclick="shareMovie('The Bride','MAR 13–19','8:00pm nightly','14A','126 min','bride')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-            Share
-          </button>
-        </div>
-      </div>
-
-    </div>
-  </section>
+  <!-- ══════════════════════════════ HERO — NOW PLAYING (rendered by JS) -->
+  <section id="hero" class="hero"><!-- filled by renderMovies() --></section>
   <div class="hero-spacer"></div>
 
   <!-- ══════════════════════════════════ COMING SOON -->
@@ -1384,76 +1340,7 @@
 
       <div class="cards-stack">
 
-        <!-- Project Hail Mary -->
-        <div class="movie-card" id="card-hailmary" data-reveal data-delay="200">
-          <div class="poster poster-hailmary">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSatNA0E_YKQzqk1gccbRQPrg6fbXnS9NDauJFt4jlbBNH-yfAs"
-              alt="Project Hail Mary poster"
-              loading="lazy"
-              onerror="this.style.display='none'"
-            />
-          </div>
-          <div class="card-body">
-            <div class="card-date-bar">
-              <span class="card-date-range">MAR 20–26</span>
-              <span class="card-date-time">7:00pm</span>
-            </div>
-            <div class="card-title">Project Hail Mary</div>
-            <div class="card-meta">
-              <span class="meta-tag">G</span>
-              <span class="meta-tag">157 min</span>
-            </div>
-            <div class="card-desc">Science fiction thriller starring Ryan Gosling.</div>
-            <div class="card-action">
-              <button class="btn-trailer-card" onclick="openTrailer('https://www.youtube.com/embed/m08TxIsFTRI?start=1')">
-                ▶&nbsp; Watch Trailer
-              </button>
-              <div class="share-wrap">
-                <button class="btn-share" onclick="shareMovie('Project Hail Mary','MAR 20–26','7:00pm','G','157 min','hailmary')">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                  Share
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Super Mario Galaxy Movie -->
-        <div class="movie-card" id="card-mario" data-reveal data-delay="350">
-          <div class="poster poster-mario">
-            <img
-              src="https://i.redd.it/fehzqd0ue9se1.jpeg"
-              alt="The Super Mario Galaxy Movie poster"
-              loading="lazy"
-              onerror="this.style.display='none'"
-            />
-            <div class="badge-3d">Real D 3D</div>
-          </div>
-          <div class="card-body">
-            <div class="card-date-bar">
-              <span class="card-date-range">APR 3–16</span>
-              <span class="card-date-time">7:00pm + 2:00pm Sat &amp; Sun</span>
-            </div>
-            <div class="card-title">The Super Mario Galaxy Movie</div>
-            <div class="card-meta">
-              <span class="meta-tag">G</span>
-              <span class="meta-tag">98 min</span>
-            </div>
-            <div class="card-note">Special Two-Week Engagement &nbsp;·&nbsp; Real D 3D</div>
-            <div class="card-action">
-              <button class="btn-trailer-card" onclick="openTrailer('https://www.youtube.com/embed/En5QZmL5R1s')">
-                ▶&nbsp; Watch Trailer
-              </button>
-              <div class="share-wrap">
-                <button class="btn-share" onclick="shareMovie('The Super Mario Galaxy Movie','APR 3–16','7:00pm + 2:00pm Sat & Sun','G','98 min','mario')">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-                  Share
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <!-- Coming Soon cards rendered by renderMovies() -->
 
       </div>
     </div>
@@ -1822,37 +1709,8 @@
 
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTrailer(); });
 
-    // ─── Date-based badges for coming-soon cards ────────────
-    function parseShowDate(str) {
-      const months = { Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11 };
-      const [mon, day] = str.trim().split(' ');
-      const d = new Date();
-      d.setHours(0,0,0,0);
-      d.setMonth(months[mon]);
-      d.setDate(parseInt(day, 10));
-      return d;
-    }
-
-    [
-      { cardId: 'card-hailmary', start: 'Mar 20', end: 'Mar 26' },
-      { cardId: 'card-mario',    start: 'Apr 3',  end: 'Apr 16' },
-    ].forEach(f => {
-      const today = new Date(); today.setHours(0,0,0,0);
-      const card  = document.getElementById(f.cardId);
-      if (!card) return;
-      if (today >= parseShowDate(f.start) && today <= parseShowDate(f.end)) {
-        const b = document.createElement('div');
-        Object.assign(b.style, {
-          position:'absolute', top:'10px', left:'10px',
-          background:'#F5A623', color:'#000',
-          fontSize:'10px', fontWeight:'700',
-          letterSpacing:'1.5px', textTransform:'uppercase',
-          padding:'3px 8px', borderRadius:'2px',
-        });
-        b.textContent = 'Now Playing';
-        card.querySelector('.poster').appendChild(b);
-      }
-    });
+    // ─── Date-based "Now Playing" badges (called after renderMovies) ─────
+    // initDateBadges() is called from renderMovies() once cards exist in DOM
 
     // ─── Active nav on scroll ────────────────────────────────
     const navLinks = document.querySelectorAll('nav a');
@@ -1885,6 +1743,185 @@
 
     document.getElementById('footer-email-input')
       .addEventListener('keydown', e => { if (e.key === 'Enter') handleFooterSubscribe(); });
+  </script>
+
+  <!-- ═══════════════════ MOVIES RENDER (data-driven from movies.json) ══ -->
+  <script>
+    const SHARE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>`;
+
+    // Store movie data globally so share buttons can look up by key
+    window._moviesData = null;
+
+    // Share by key — avoids putting arbitrary strings in onclick attributes
+    function shareMovieByKey(key) {
+      const data = window._moviesData;
+      if (!data) return;
+      const m = (key === (data.nowPlaying && data.nowPlaying.key))
+        ? data.nowPlaying
+        : (data.comingSoon || []).find(c => c.key === key);
+      if (!m) return;
+      shareMovie(m.title, m.dateRange, m.showtime, m.rating, m.duration, m.key);
+    }
+
+    function esc(s) {
+      return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function buildHeroHTML(m) {
+      const ytId       = m.trailerYouTubeId;
+      const trailerSrc = `https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&loop=1&playlist=${ytId}&controls=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1`;
+      return `
+        <div class="hero-video-wrap">
+          <iframe src="${trailerSrc}" allow="autoplay; encrypted-media" title="${esc(m.title)} — Official Trailer"></iframe>
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content page-wrap">
+          <div class="hero-eyebrow">
+            <span class="badge-now">Now Playing</span>
+            <div class="hero-tags">
+              <span class="hero-tag">${esc(m.rating)}</span>
+              <span class="hero-tag">${esc(m.duration)}</span>
+            </div>
+          </div>
+          <h1 class="hero-title">${esc(m.title)}</h1>
+          <div class="hero-date-block">
+            <span class="hero-date-range">${esc(m.dateRange)}</span>
+            <span class="hero-date-time">${esc(m.showtime)}</span>
+          </div>
+          <p class="hero-desc">${esc(m.description)}</p>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+            <button class="btn-trailer-hero" onclick="openTrailer('https://www.youtube.com/embed/${ytId}')">
+              ▶&nbsp; Watch Trailer
+            </button>
+            <div class="share-wrap">
+              <button class="btn-share btn-share-hero" onclick="shareMovieByKey('${esc(m.key)}')">
+                ${SHARE_SVG} Share
+              </button>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function buildCardHTML(m, delay) {
+      const ytId      = m.trailerYouTubeId;
+      const start     = m.trailerStartSeconds > 0 ? `?start=${m.trailerStartSeconds}` : '';
+      const posterImg = `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
+      const badge3d   = m.badge3D ? `<div class="badge-3d">Real D 3D</div>` : '';
+      const note      = m.specialNote ? `<div class="card-note">${esc(m.specialNote)}</div>` : '';
+      return `
+        <div class="movie-card" id="card-${m.key}" data-reveal data-delay="${delay}">
+          <div class="poster poster-${m.key}">
+            <img src="${posterImg}" alt="${esc(m.title)} poster" loading="lazy" onerror="this.style.display='none'" />
+            ${badge3d}
+          </div>
+          <div class="card-body">
+            <div class="card-date-bar">
+              <span class="card-date-range">${esc(m.dateRange)}</span>
+              <span class="card-date-time">${esc(m.showtime)}</span>
+            </div>
+            <div class="card-title">${esc(m.title)}</div>
+            <div class="card-meta">
+              <span class="meta-tag">${esc(m.rating)}</span>
+              <span class="meta-tag">${esc(m.duration)}</span>
+            </div>
+            ${note}
+            <div class="card-desc">${esc(m.description)}</div>
+            <div class="card-action">
+              <button class="btn-trailer-card" onclick="openTrailer('https://www.youtube.com/embed/${ytId}${start}')">
+                ▶&nbsp; Watch Trailer
+              </button>
+              <div class="share-wrap">
+                <button class="btn-share" onclick="shareMovieByKey('${esc(m.key)}')">
+                  ${SHARE_SVG} Share
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function parseDateRangeStart(dateRange) {
+      // e.g. "MAR 20–26" → picks first part "MAR 20"
+      const months = { JAN:0,FEB:1,MAR:2,APR:3,MAY:4,JUN:5,JUL:6,AUG:7,SEP:8,OCT:9,NOV:10,DEC:11 };
+      const m = dateRange.toUpperCase().match(/([A-Z]+)\s+(\d+)/);
+      if (!m) return null;
+      const d = new Date(); d.setHours(0,0,0,0);
+      d.setMonth(months[m[1]]); d.setDate(parseInt(m[2], 10));
+      return d;
+    }
+    function parseDateRangeEnd(dateRange) {
+      // e.g. "MAR 20–26" or "APR 3–16"
+      const months = { JAN:0,FEB:1,MAR:2,APR:3,MAY:4,JUN:5,JUL:6,AUG:7,SEP:8,OCT:9,NOV:10,DEC:11 };
+      const m = dateRange.toUpperCase().match(/([A-Z]+)\s+\d+[–\-](\d+)/);
+      const ms = dateRange.toUpperCase().match(/([A-Z]+)/);
+      if (!m || !ms) return null;
+      const d = new Date(); d.setHours(0,0,0,0);
+      d.setMonth(months[ms[1]]); d.setDate(parseInt(m[2], 10));
+      return d;
+    }
+
+    function initDateBadges(movies) {
+      const today = new Date(); today.setHours(0,0,0,0);
+      (movies.comingSoon || []).forEach(m => {
+        const card = document.getElementById(`card-${m.key}`);
+        if (!card) return;
+        const start = parseDateRangeStart(m.dateRange);
+        const end   = parseDateRangeEnd(m.dateRange);
+        if (start && end && today >= start && today <= end) {
+          const b = document.createElement('div');
+          Object.assign(b.style, {
+            position:'absolute', top:'10px', left:'10px',
+            background:'#F5A623', color:'#000',
+            fontSize:'10px', fontWeight:'700',
+            letterSpacing:'1.5px', textTransform:'uppercase',
+            padding:'3px 8px', borderRadius:'2px',
+          });
+          b.textContent = 'Now Playing';
+          card.querySelector('.poster').appendChild(b);
+        }
+      });
+    }
+
+    async function renderMovies() {
+      try {
+        const res = await fetch('/movies.json?bust=' + Date.now());
+        if (!res.ok) throw new Error('movies.json not found');
+        const data = await res.json();
+        window._moviesData = data;
+
+        // Hero
+        const hero = document.getElementById('hero');
+        if (hero && data.nowPlaying) {
+          hero.innerHTML = buildHeroHTML(data.nowPlaying);
+        }
+
+        // Coming Soon cards
+        const stack = document.querySelector('#coming-soon .cards-stack');
+        if (stack && data.comingSoon) {
+          const delays = [200, 350];
+          stack.innerHTML = data.comingSoon
+            .slice(0, 2)
+            .map((m, i) => buildCardHTML(m, delays[i] || 200))
+            .join('');
+        }
+
+        // Date-based "Now Playing" badge on coming soon cards
+        initDateBadges(data);
+
+      } catch (e) {
+        console.warn('renderMovies: could not load movies.json', e);
+      } finally {
+        // Always init scroll reveal (some elements are static)
+        initReveal();
+      }
+    }
+
+    // Run on DOMContentLoaded
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', renderMovies);
+    } else {
+      renderMovies();
+    }
   </script>
 
   <script>
@@ -1978,19 +2015,21 @@
       }, 0);
     }
 
-    /* ── Scroll Reveal ── */
-    const revealEls = document.querySelectorAll('[data-reveal]');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const el = entry.target;
-          const delay = el.dataset.delay || 0;
-          setTimeout(() => el.classList.add('is-visible'), delay);
-          observer.unobserve(el);
-        }
-      });
-    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-    revealEls.forEach(el => observer.observe(el));
+    /* ── Scroll Reveal — called after dynamic content is injected ── */
+    function initReveal() {
+      const revealEls = document.querySelectorAll('[data-reveal]');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const delay = el.dataset.delay || 0;
+            setTimeout(() => el.classList.add('is-visible'), delay);
+            observer.unobserve(el);
+          }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+      revealEls.forEach(el => observer.observe(el));
+    }
   </script>
 
 </body>
