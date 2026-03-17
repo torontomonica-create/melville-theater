@@ -1366,7 +1366,7 @@
           ▶&nbsp; Watch Trailer
         </button>
         <div class="share-wrap">
-          <button class="btn-share btn-share-hero" onclick="shareMovie('The Bride','MAR 13–19','8:00pm nightly','14A','126 min')">
+          <button class="btn-share btn-share-hero" onclick="shareMovie('The Bride','MAR 13–19','8:00pm nightly','14A','126 min','bride')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
             Share
           </button>
@@ -1410,7 +1410,7 @@
                 ▶&nbsp; Watch Trailer
               </button>
               <div class="share-wrap">
-                <button class="btn-share" onclick="shareMovie('Project Hail Mary','MAR 20–26','7:00pm','G','157 min')">
+                <button class="btn-share" onclick="shareMovie('Project Hail Mary','MAR 20–26','7:00pm','G','157 min','hailmary')">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
                   Share
                 </button>
@@ -1446,7 +1446,7 @@
                 ▶&nbsp; Watch Trailer
               </button>
               <div class="share-wrap">
-                <button class="btn-share" onclick="shareMovie('The Super Mario Galaxy Movie','APR 3–16','7:00pm + 2:00pm Sat & Sun','G','98 min')">
+                <button class="btn-share" onclick="shareMovie('The Super Mario Galaxy Movie','APR 3–16','7:00pm + 2:00pm Sat & Sun','G','98 min','mario')">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
                   Share
                 </button>
@@ -1889,7 +1889,7 @@
 
   <script>
     /* ── Share Popover ── */
-    function shareMovie(title, dates, time, rating, duration) {
+    function shareMovie(title, dates, time, rating, duration, movieKey) {
       const btn = event.currentTarget;
       const wrap = btn.closest('.share-wrap');
       const existing = wrap.querySelector('.share-popover');
@@ -1903,7 +1903,9 @@
       // 다른 팝오버 모두 닫기
       document.querySelectorAll('.share-popover.open').forEach(p => p.classList.remove('open'));
 
-      const url   = encodeURIComponent(window.location.href);
+      const baseUrl = window.location.origin + window.location.pathname;
+      const shareUrl = movieKey ? `${baseUrl}?movie=${movieKey}` : baseUrl;
+      const url   = encodeURIComponent(shareUrl);
       const plain = `${title} (${rating} · ${duration}) — ${dates} · ${time} at Melville Theatre`;
       const full  = encodeURIComponent(`🎬 ${title} (${rating} · ${duration})\n📅 ${dates} · ${time}\n📍 Melville Theatre, Melville SK\n🎟 melvilletheatre.com`);
 
