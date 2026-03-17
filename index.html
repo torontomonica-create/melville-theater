@@ -63,6 +63,7 @@
       font-size: 17px;
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden; /* prevent horizontal scroll from wide elements */
     }
 
     section[id] { scroll-margin-top: 72px; }
@@ -136,41 +137,79 @@
 
     header.scrolled .film-reel-icon { color: var(--amber); opacity: 0.7; }
 
-    /* ─── Nav — scrollable on mobile ─────────────────────── */
-    nav {
+    /* ─── Hamburger button (mobile only) ──────────────────── */
+    .film-reel-icon { display: none; } /* hidden on mobile, shown on desktop */
+
+    .header-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+    .hamburger-btn {
       display: flex;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+    }
+
+    .hamburger-btn span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: rgba(255,255,255,0.8);
+      border-radius: 2px;
+      transition: transform 0.28s ease, opacity 0.2s ease;
+    }
+
+    header.nav-open .hamburger-btn span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    header.nav-open .hamburger-btn span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    header.nav-open .hamburger-btn span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ─── Nav — dropdown on mobile ─────────────────────── */
+    nav {
+      display: none;
+      flex-direction: column;
       scrollbar-width: none;
     }
 
     nav::-webkit-scrollbar { display: none; }
 
+    /* When nav is open on mobile */
+    header.nav-open nav {
+      display: flex;
+      background: rgba(6, 5, 8, 0.97);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 6px 0 16px;
+    }
+
     nav a {
       flex: 0 0 auto;
-      text-align: center;
-      padding: 10px 14px;
-      font-size: 11px;
+      padding: 13px var(--side-pad);
+      font-size: 14px;
       font-weight: 600;
       letter-spacing: 0.6px;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(255, 255, 255, 0.7);
       text-decoration: none;
       transition: color 0.2s;
       white-space: nowrap;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
     }
 
-    header.scrolled nav a { color: rgba(255, 255, 255, 0.6); }
+    header.scrolled nav a { color: rgba(255, 255, 255, 0.7); }
 
     nav a:hover,
-    nav a.active {
-      color: var(--amber-vivid);
-    }
+    nav a.active { color: var(--amber-vivid); }
 
     header.scrolled nav a:hover,
-    header.scrolled nav a.active {
-      color: var(--amber-vivid);
-    }
+    header.scrolled nav a.active { color: var(--amber-vivid); }
 
     /* ─── Hero — Fullscreen video ─────────────────────────── */
     /* Hero spacer — holds the scroll space the fixed hero occupies */
@@ -190,6 +229,15 @@
       align-items: flex-end;
       overflow: hidden;
       z-index: 1;
+    }
+
+    /* Hero static poster (mobile fallback — YouTube thumbnail) */
+    .hero-poster-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center top;
+      z-index: 0;
     }
 
     .hero-video-wrap {
@@ -378,7 +426,7 @@
 
     .poster {
       width: 100%;
-      aspect-ratio: 2 / 3;
+      aspect-ratio: 16 / 9;
       position: relative;
       overflow: hidden;
       background: #1a1a1a;
@@ -884,8 +932,8 @@
 
     .ratings-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
+      grid-template-columns: 1fr;
+      gap: 10px;
     }
 
     .rating-item {
@@ -1015,7 +1063,12 @@
     .footer-email-row {
       display: flex;
       gap: 8px;
+      flex-wrap: wrap;
     }
+
+    .footer-email-input { min-width: 160px; }
+
+    .footer-subscribe-btn { flex-shrink: 0; }
 
     .footer-email-input {
       flex: 1;
@@ -1193,10 +1246,21 @@
         padding: 16px 0;
       }
 
+      /* Show reel icon, hide hamburger on desktop */
+      .film-reel-icon  { display: block; }
+      .hamburger-btn   { display: none; }
+
+      /* Nav: always visible, horizontal, inline */
       nav {
+        display: flex !important; /* override mobile open/closed state */
+        flex-direction: row;
         border-top: none;
         flex: 0 0 auto;
         overflow: visible;
+        background: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        padding: 0 !important;
       }
 
       nav a {
@@ -1207,9 +1271,11 @@
         height: 100%;
         font-size: 12px;
         letter-spacing: 0.8px;
+        border-bottom: none;
       }
 
       /* Hero */
+      .hero-poster-bg  { display: none; } /* video plays on desktop */
       .hero-video-wrap { display: block; }
       .hero-title      { font-size: 96px; }
       .hero-date-range { font-size: 76px; }
@@ -1306,20 +1372,25 @@
           <div class="theatre-name">Melville <em>Theatre</em></div>
           <div class="tagline">Melville's Cinema Since 1995</div>
         </div>
-        <svg class="film-reel-icon" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <circle cx="19" cy="19" r="17" stroke="currentColor" stroke-width="1.5" opacity="0.8"/>
-          <circle cx="19" cy="19" r="6"  stroke="currentColor" stroke-width="1.5" opacity="0.8"/>
-          <circle cx="19" cy="8"  r="2.4" fill="currentColor" opacity="0.7"/>
-          <circle cx="19" cy="30" r="2.4" fill="currentColor" opacity="0.7"/>
-          <circle cx="8"  cy="19" r="2.4" fill="currentColor" opacity="0.7"/>
-          <circle cx="30" cy="19" r="2.4" fill="currentColor" opacity="0.7"/>
-          <circle cx="11.5" cy="11.5" r="2.4" fill="currentColor" opacity="0.7"/>
-          <circle cx="26.5" cy="26.5" r="2.4" fill="currentColor" opacity="0.7"/>
-          <circle cx="26.5" cy="11.5" r="2.4" fill="currentColor" opacity="0.7"/>
-          <circle cx="11.5" cy="26.5" r="2.4" fill="currentColor" opacity="0.7"/>
-        </svg>
+        <div class="header-actions">
+          <svg class="film-reel-icon" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="19" cy="19" r="17" stroke="currentColor" stroke-width="1.5" opacity="0.8"/>
+            <circle cx="19" cy="19" r="6"  stroke="currentColor" stroke-width="1.5" opacity="0.8"/>
+            <circle cx="19" cy="8"  r="2.4" fill="currentColor" opacity="0.7"/>
+            <circle cx="19" cy="30" r="2.4" fill="currentColor" opacity="0.7"/>
+            <circle cx="8"  cy="19" r="2.4" fill="currentColor" opacity="0.7"/>
+            <circle cx="30" cy="19" r="2.4" fill="currentColor" opacity="0.7"/>
+            <circle cx="11.5" cy="11.5" r="2.4" fill="currentColor" opacity="0.7"/>
+            <circle cx="26.5" cy="26.5" r="2.4" fill="currentColor" opacity="0.7"/>
+            <circle cx="26.5" cy="11.5" r="2.4" fill="currentColor" opacity="0.7"/>
+            <circle cx="11.5" cy="26.5" r="2.4" fill="currentColor" opacity="0.7"/>
+          </svg>
+          <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
       </div>
-      <nav>
+      <nav id="main-nav">
         <a href="#hero"        class="active">Now Playing</a>
         <a href="#coming-soon"            >Coming Soon</a>
         <a href="#about"                  >About</a>
@@ -1709,6 +1780,31 @@
 
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTrailer(); });
 
+    // ─── Hamburger menu toggle ────────────────────────────────
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    if (hamburgerBtn) {
+      hamburgerBtn.addEventListener('click', () => {
+        const isOpen = header.classList.toggle('nav-open');
+        hamburgerBtn.setAttribute('aria-expanded', isOpen);
+      });
+    }
+
+    // Close nav when a nav link is tapped on mobile
+    document.querySelectorAll('#main-nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        header.classList.remove('nav-open');
+        if (hamburgerBtn) hamburgerBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // Close nav when clicking outside header on mobile
+    document.addEventListener('click', (e) => {
+      if (!header.contains(e.target)) {
+        header.classList.remove('nav-open');
+        if (hamburgerBtn) hamburgerBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+
     // ─── Date-based "Now Playing" badges (called after renderMovies) ─────
     // initDateBadges() is called from renderMovies() once cards exist in DOM
 
@@ -1770,7 +1866,9 @@
     function buildHeroHTML(m) {
       const ytId       = m.trailerYouTubeId;
       const trailerSrc = `https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&loop=1&playlist=${ytId}&controls=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1`;
+      const posterUrl  = `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
       return `
+        <div class="hero-poster-bg" style="background-image:url('${posterUrl}')"></div>
         <div class="hero-video-wrap">
           <iframe src="${trailerSrc}" allow="autoplay; encrypted-media" title="${esc(m.title)} — Official Trailer"></iframe>
         </div>
