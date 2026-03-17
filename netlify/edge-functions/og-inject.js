@@ -7,12 +7,12 @@ const MOVIES = {
   hailmary: {
     title: 'Coming Soon: Project Hail Mary — Melville Theatre',
     description: 'MAR 20–26 · 7:00pm · G · 157 min · Melville Theatre, Melville SK',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSatNA0E_YKQzqk1gccbRQPrg6fbXnS9NDauJFt4jlbBNH-yfAs',
+    image: 'https://img.youtube.com/vi/m08TxIsFTRI/maxresdefault.jpg',
   },
   mario: {
     title: 'Coming Soon: The Super Mario Galaxy Movie — Melville Theatre',
     description: 'APR 3–16 · 7:00pm + 2:00pm Sat & Sun · G · 98 min · Real D 3D · Melville Theatre, Melville SK',
-    image: 'https://i.redd.it/fehzqd0ue9se1.jpeg',
+    image: 'https://img.youtube.com/vi/En5QZmL5R1s/maxresdefault.jpg',
   },
 };
 
