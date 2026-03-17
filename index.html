@@ -2047,7 +2047,10 @@
         const data = await res.json();
         window._moviesData = data;
 
-        const { nowPlaying, comingSoon } = classifyFilms(data.films || []);
+        // Support both new { films:[] } and old { nowPlaying, comingSoon } format
+        const films = data.films
+          || [data.nowPlaying, ...(data.comingSoon || [])].filter(Boolean);
+        const { nowPlaying, comingSoon } = classifyFilms(films);
 
         // Hero — Now Playing
         const hero = document.getElementById('hero');
