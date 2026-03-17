@@ -408,8 +408,8 @@
 
     /* ─── Movie Cards ─────────────────────────────────────── */
     .cards-stack {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: 1fr;
       gap: 20px;
     }
 
@@ -1214,12 +1214,10 @@
       .hero-date-range { font-size: 60px; }
 
       .cards-stack {
-        flex-direction: row;
+        grid-template-columns: repeat(2, 1fr);
         align-items: stretch;
         gap: 20px;
       }
-
-      .cards-stack .movie-card { flex: 1; }
 
       .about-stats { grid-template-columns: repeat(4, 1fr); }
 
@@ -1283,10 +1281,16 @@
 
       .content-section { padding: 56px 0; }
 
+      /* Coming Soon — auto columns: 1→2→3 based on card count + viewport */
+      .cards-stack {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 24px;
+      }
+
       /* Coming Soon — poster height */
       .poster {
         aspect-ratio: unset;
-        height: clamp(360px, 48vh, 520px);
+        height: clamp(260px, 36vh, 400px);
       }
 
       /* About */
@@ -2066,9 +2070,8 @@
         const stack = document.querySelector('#coming-soon .cards-stack');
         if (stack) {
           if (comingSoon.length > 0) {
-            const delays = [200, 350];
             stack.innerHTML = comingSoon
-              .map((m, i) => buildCardHTML(m, delays[i] || 200))
+              .map((m, i) => buildCardHTML(m, i * 150))
               .join('');
           } else {
             stack.innerHTML = `<p style="color:var(--text-muted);padding:20px 0;">More films coming soon — stay tuned!</p>`;
