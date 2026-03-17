@@ -1954,8 +1954,7 @@
       }) || null;
       const comingSoon = films
         .filter(f => new Date(f.startDate + 'T00:00:00') > today)
-        .sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
-        .slice(0, 2);
+        .sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
       return { nowPlaying, comingSoon };
     }
 
@@ -2027,7 +2026,7 @@
             ${note}
             <div class="card-desc">${esc(m.description)}</div>
             <div class="card-action">
-              <button class="btn-trailer-card" onclick="openTrailer('https://www.youtube.com/embed/${ytId}${start}')">
+              <button class="btn-trailer-card" onclick="openTrailer('https://www.youtube.com/embed/${ytId}${startSec}')">
                 ▶&nbsp; Watch Trailer
               </button>
               <div class="share-wrap">
