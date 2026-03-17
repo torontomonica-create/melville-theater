@@ -1213,11 +1213,9 @@
       .hero-title      { font-size: 78px; }
       .hero-date-range { font-size: 60px; }
 
-      .cards-stack {
-        grid-template-columns: repeat(2, 1fr);
-        align-items: stretch;
-        gap: 20px;
-      }
+      /* Tablet: 1-film → full width, 2+ films → 2 columns */
+      .cards-stack                    { grid-template-columns: repeat(2, 1fr); align-items: stretch; gap: 20px; }
+      .cards-stack[data-count="1"]   { grid-template-columns: 1fr; }
 
       .about-stats { grid-template-columns: repeat(4, 1fr); }
 
@@ -1281,16 +1279,21 @@
 
       .content-section { padding: 56px 0; }
 
-      /* Coming Soon — auto columns: 1→2→3 based on card count + viewport */
-      .cards-stack {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 24px;
-      }
+      /* Coming Soon — columns by film count */
+      .cards-stack                   { gap: 24px; }
+      .cards-stack[data-count="1"]   { grid-template-columns: 1fr; }
+      .cards-stack[data-count="2"]   { grid-template-columns: repeat(2, 1fr); }
+      .cards-stack[data-count="3"]   { grid-template-columns: repeat(3, 1fr); }
+      .cards-stack[data-count="4"]   { grid-template-columns: repeat(2, 1fr); }
 
       /* Coming Soon — poster height */
       .poster {
         aspect-ratio: unset;
-        height: clamp(260px, 36vh, 400px);
+        height: clamp(220px, 30vh, 380px);
+      }
+      /* 1-film full-width: taller poster */
+      .cards-stack[data-count="1"] .poster {
+        height: clamp(280px, 42vh, 480px);
       }
 
       /* About */
@@ -2072,10 +2075,12 @@
         const stack = document.querySelector('#coming-soon .cards-stack');
         if (stack) {
           if (comingSoon.length > 0) {
+            stack.dataset.count = comingSoon.length;
             stack.innerHTML = comingSoon
               .map((m, i) => buildCardHTML(m, i * 150))
               .join('');
           } else {
+            delete stack.dataset.count;
             stack.innerHTML = `<p style="color:var(--text-muted);padding:20px 0;">More films coming soon — stay tuned!</p>`;
           }
         }
