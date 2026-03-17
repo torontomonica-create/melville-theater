@@ -103,7 +103,6 @@
     }
     .status-playing { background: var(--amber); color: #000; }
     .status-soon    { background: var(--border); color: var(--muted); }
-    .status-past    { background: transparent; color: #555; border: 1px solid #333; }
 
     /* ── Film row ── */
     .film-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
@@ -116,7 +115,6 @@
       transition: border-color .2s;
     }
     .film-row.is-playing { border-color: var(--amber); }
-    .film-row.is-past    { opacity: .5; }
 
     .film-row-header {
       display: flex; align-items: center; gap: 12px;
@@ -317,8 +315,7 @@
 
   function statusLabel(status) {
     if (status === 'playing') return '<span class="status-badge status-playing">Now Playing</span>';
-    if (status === 'soon')    return '<span class="status-badge status-soon">Coming Soon</span>';
-    return '<span class="status-badge status-past">Past</span>';
+    return '<span class="status-badge status-soon">Coming Soon</span>';
   }
 
   function formatDateRange(startStr, endStr) {
@@ -335,21 +332,22 @@
   function renderFilmList() {
     const list = document.getElementById('film-list');
 
-    // Sort: playing first, then upcoming by date, then past newest-first
-    const sorted = [...films].sort((a, b) => {
-      const sa = getStatus(a), sb = getStatus(b);
-      const order = { playing: 0, soon: 1, past: 2 };
-      if (order[sa] !== order[sb]) return order[sa] - order[sb];
-      return new Date(a.startDate) - new Date(b.startDate);
-    });
+    // Filter out past films, sort: playing first, then upcoming by date
+    const sorted = [...films]
+      .filter(f => getStatus(f) !== 'past')
+      .sort((a, b) => {
+        const sa = getStatus(a), sb = getStatus(b);
+        if (sa === 'playing' && sb !== 'playing') return -1;
+        if (sb === 'playing' && sa !== 'playing') return 1;
+        return new Date(a.startDate) - new Date(b.startDate);
+      });
 
-    list.innerHTML = sorted.map((film, sortedIdx) => {
-      // find original index for edits/deletes
+    list.innerHTML = sorted.map((film) => {
       const idx = films.indexOf(film);
       const status = getStatus(film);
       const dateRange = film.startDate ? formatDateRange(film.startDate, film.endDate) : '—';
       return `
-        <div class="film-row ${status === 'playing' ? 'is-playing' : ''} ${status === 'past' ? 'is-past' : ''}"
+        <div class="film-row ${status === 'playing' ? 'is-playing' : ''}"
              id="film-row-${idx}">
           <div class="film-row-header" onclick="toggleExpand(${idx})">
             ${statusLabel(status)}
@@ -377,9 +375,8 @@
   function updateSummary() {
     const playing = films.filter(f => getStatus(f) === 'playing').length;
     const soon    = films.filter(f => getStatus(f) === 'soon').length;
-    const past    = films.filter(f => getStatus(f) === 'past').length;
     document.getElementById('status-summary').textContent =
-      `${playing} playing · ${soon} coming soon · ${past} past`;
+      `${playing} playing · ${soon} coming soon`;
   }
 
   function buildEditForm(film, idx) {
@@ -461,9 +458,7 @@
     const badgeEl = row.querySelector('.status-badge').parentElement;
     if (titleEl) titleEl.textContent = films[idx].title || 'Untitled';
     if (datesEl) datesEl.textContent = `${dateRange} · ${films[idx].showtime || ''}`;
-    // Update playing state
     row.classList.toggle('is-playing', status === 'playing');
-    row.classList.toggle('is-past',    status === 'past');
     updateSummary();
   }
 
@@ -528,7 +523,7 @@
       const res = await fetch('/api/update-movies', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: adminPassword, movies: { films } }),
+        body: JSON.stringify({ password: adminPassword, movies: { films: films.filter(f => getStatus(f) !== 'past') } }),
       });
       const data = await res.json();
 
