@@ -1791,9 +1791,14 @@
 
     // Close nav when a nav link is tapped on mobile
     document.querySelectorAll('#main-nav a').forEach(link => {
-      link.addEventListener('click', () => {
+      link.addEventListener('click', (e) => {
         header.classList.remove('nav-open');
         if (hamburgerBtn) hamburgerBtn.setAttribute('aria-expanded', 'false');
+        // #hero is position:fixed so normal anchor scroll does nothing — force scroll to top
+        if (link.getAttribute('href') === '#hero') {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
       });
     });
 
