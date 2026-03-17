@@ -35,8 +35,8 @@ export default async (req, context) => {
   }
 
   // ── 2. Validate payload ───────────────────────────────────────────────────
-  if (!movies || !movies.nowPlaying || !Array.isArray(movies.comingSoon)) {
-    return json({ error: 'Invalid movies payload' }, 400);
+  if (!movies || !Array.isArray(movies.films)) {
+    return json({ error: 'Invalid movies payload — expected { films: [...] }' }, 400);
   }
 
   // ── 3. GitHub API — get current file SHA ─────────────────────────────────

@@ -6,7 +6,6 @@
   <title>Melville Theatre — Admin</title>
   <link rel="icon" href="../fav/favicon.ico" />
   <style>
-    /* ── Reset & Base ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -20,6 +19,7 @@
       --muted:   #888;
       --green:   #2db37a;
       --red:     #d94f4f;
+      --blue:    #4a9eff;
     }
 
     body {
@@ -43,19 +43,9 @@
       top: 0;
       z-index: 100;
     }
-    .admin-logo {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      color: var(--amber);
-    }
+    .admin-logo { font-size: 18px; font-weight: 700; letter-spacing: .04em; color: var(--amber); }
     .admin-logo span { color: var(--text); font-weight: 400; }
-    .admin-header-right {
-      margin-left: auto;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .admin-header-right { margin-left: auto; }
     .btn-view-site {
       background: transparent;
       border: 1px solid var(--border);
@@ -70,234 +60,174 @@
     .btn-view-site:hover { border-color: var(--amber); color: var(--amber); }
 
     /* ── Layout ── */
-    .admin-wrap {
-      max-width: 820px;
-      margin: 0 auto;
-      padding: 32px 20px 80px;
-    }
+    .admin-wrap { max-width: 760px; margin: 0 auto; padding: 32px 20px 100px; }
 
     /* ── Lock screen ── */
     #lock-screen {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: calc(100vh - 61px);
-      gap: 20px;
-      padding: 40px 20px;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; min-height: calc(100vh - 61px);
+      gap: 20px; padding: 40px 20px;
     }
-    .lock-icon { font-size: 48px; line-height: 1; }
+    .lock-icon { font-size: 48px; }
     .lock-title { font-size: 22px; font-weight: 700; }
     .lock-sub   { color: var(--muted); font-size: 14px; }
     .lock-form  { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
     .lock-form input {
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 11px 16px;
-      border-radius: 8px;
-      font-size: 15px;
-      width: 220px;
-      outline: none;
-      transition: border-color .2s;
+      background: var(--card); border: 1px solid var(--border);
+      color: var(--text); padding: 11px 16px; border-radius: 8px;
+      font-size: 15px; width: 220px; outline: none; transition: border-color .2s;
     }
     .lock-form input:focus { border-color: var(--amber); }
     .btn-unlock {
-      background: var(--amber);
-      color: #000;
-      border: none;
-      padding: 11px 24px;
-      border-radius: 8px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background .2s;
+      background: var(--amber); color: #000; border: none;
+      padding: 11px 24px; border-radius: 8px; font-size: 15px;
+      font-weight: 700; cursor: pointer; transition: background .2s;
     }
     .btn-unlock:hover { background: var(--amber-d); }
     .lock-error { color: var(--red); font-size: 14px; display: none; }
 
-    /* ── Section titles ── */
-    .section-title {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--amber);
-      margin-bottom: 16px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    /* ── Movie form card ── */
-    .movie-form-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 24px;
-      margin-bottom: 24px;
-    }
-    .movie-form-card.now-playing {
-      border-color: var(--amber);
-      box-shadow: 0 0 0 1px rgba(232,160,32,.15);
-    }
-
-    .card-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    /* ── Section title ── */
+    .section-header {
+      display: flex; align-items: center; justify-content: space-between;
       margin-bottom: 20px;
     }
-    .card-badge {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      padding: 4px 10px;
-      border-radius: 20px;
+    .section-title {
+      font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--amber);
     }
-    .badge-now  { background: var(--amber);   color: #000; }
-    .badge-soon { background: var(--border);  color: var(--muted); }
-    .card-header-title { font-size: 15px; font-weight: 600; flex: 1; }
-    .card-slot-label { font-size: 12px; color: var(--muted); margin-left: auto; }
 
-    /* ── Form grid ── */
+    /* ── Status badge ── */
+    .status-badge {
+      font-size: 10px; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; padding: 3px 10px; border-radius: 20px;
+    }
+    .status-playing { background: var(--amber); color: #000; }
+    .status-soon    { background: var(--border); color: var(--muted); }
+    .status-past    { background: transparent; color: #555; border: 1px solid #333; }
+
+    /* ── Film row ── */
+    .film-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+
+    .film-row {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color .2s;
+    }
+    .film-row.is-playing { border-color: var(--amber); }
+    .film-row.is-past    { opacity: .5; }
+
+    .film-row-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 16px; cursor: pointer; user-select: none;
+    }
+    .film-row-header:hover { background: rgba(255,255,255,.03); }
+
+    .film-row-info { flex: 1; min-width: 0; }
+    .film-row-title { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .film-row-dates { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    .film-row-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+    .btn-icon {
+      background: transparent; border: 1px solid var(--border);
+      color: var(--muted); padding: 5px 10px; border-radius: 6px;
+      font-size: 12px; cursor: pointer; transition: all .2s; white-space: nowrap;
+    }
+    .btn-icon:hover { border-color: var(--text); color: var(--text); }
+    .btn-icon.danger:hover { border-color: var(--red); color: var(--red); }
+    .chevron {
+      width: 16px; height: 16px; color: var(--muted); flex-shrink: 0;
+      transition: transform .25s;
+    }
+    .film-row.expanded .chevron { transform: rotate(180deg); }
+
+    /* ── Edit form (inside film row) ── */
+    .film-edit-form {
+      display: none;
+      padding: 0 16px 20px;
+      border-top: 1px solid var(--border);
+    }
+    .film-row.expanded .film-edit-form { display: block; }
+
     .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px;
     }
     .form-grid .full { grid-column: 1 / -1; }
 
     .field label {
-      display: block;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: .07em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 6px;
+      display: block; font-size: 11px; font-weight: 600;
+      letter-spacing: .07em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 6px;
     }
-    .field input,
-    .field select,
-    .field textarea {
-      width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 9px 12px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-family: inherit;
-      outline: none;
-      transition: border-color .2s;
+    .field input, .field select, .field textarea {
+      width: 100%; background: var(--surface); border: 1px solid var(--border);
+      color: var(--text); padding: 9px 12px; border-radius: 8px;
+      font-size: 14px; font-family: inherit; outline: none; transition: border-color .2s;
     }
-    .field input:focus,
-    .field select:focus,
-    .field textarea:focus { border-color: var(--amber); }
-    .field textarea { resize: vertical; min-height: 64px; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--amber); }
+    .field textarea { resize: vertical; min-height: 60px; }
     .field select option { background: var(--card); }
+    .field input[type="date"] { color-scheme: dark; }
 
     /* ── YouTube preview ── */
     .yt-preview-wrap {
-      margin-top: 10px;
-      border-radius: 8px;
-      overflow: hidden;
-      aspect-ratio: 16/9;
-      background: #000;
-      display: none;
+      margin-top: 8px; border-radius: 8px; overflow: hidden;
+      aspect-ratio: 16/9; background: #000; display: none;
     }
     .yt-preview-wrap.visible { display: block; }
-    .yt-preview-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .yt-preview-label {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 5px;
-    }
+    .yt-preview-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-    /* ── Toggle: 3D badge / Special note ── */
-    .toggle-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 4px;
-    }
-    .toggle-row label { margin: 0; font-size: 13px; color: var(--text); text-transform: none; letter-spacing: 0; font-weight: 400; cursor: pointer; }
-    .toggle-row input[type=checkbox] {
-      width: 16px; height: 16px; accent-color: var(--amber); cursor: pointer;
-      background: transparent; border: none; padding: 0;
-    }
+    /* ── 3D toggle ── */
+    .toggle-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+    .toggle-row label { font-size: 13px; color: var(--text); text-transform: none; letter-spacing: 0; font-weight: 400; cursor: pointer; margin: 0; }
+    .toggle-row input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--amber); cursor: pointer; background: transparent; border: none; padding: 0; }
 
-    /* ── Coming Soon slots header ── */
-    .slots-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
+    /* ── Add movie button ── */
+    .btn-add {
+      width: 100%; padding: 14px; border-radius: 12px;
+      border: 2px dashed var(--border); background: transparent;
+      color: var(--muted); font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: all .2s; font-family: inherit;
     }
+    .btn-add:hover { border-color: var(--amber); color: var(--amber); }
 
     /* ── Save bar ── */
     .save-bar {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      z-index: 99;
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: var(--surface); border-top: 1px solid var(--border);
+      padding: 14px 24px; display: flex; align-items: center; gap: 14px; z-index: 99;
     }
-    .save-status {
-      font-size: 14px;
-      color: var(--muted);
-      flex: 1;
-    }
+    .save-status { font-size: 14px; color: var(--muted); flex: 1; }
     .save-status.success { color: var(--green); }
-    .save-status.error   { color: var(--red);   }
-
+    .save-status.error   { color: var(--red); }
     .btn-save {
-      background: var(--amber);
-      color: #000;
-      border: none;
-      padding: 12px 28px;
-      border-radius: 8px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background .2s, opacity .2s;
+      background: var(--amber); color: #000; border: none;
+      padding: 12px 28px; border-radius: 8px; font-size: 15px;
+      font-weight: 700; cursor: pointer; transition: background .2s, opacity .2s;
       white-space: nowrap;
     }
     .btn-save:hover    { background: var(--amber-d); }
     .btn-save:disabled { opacity: .5; cursor: not-allowed; }
 
-    /* ── Spinner ── */
     @keyframes spin { to { transform: rotate(360deg); } }
     .spinner {
-      width: 18px; height: 18px;
-      border: 2px solid rgba(0,0,0,.3);
-      border-top-color: #000;
-      border-radius: 50%;
+      width: 18px; height: 18px; border: 2px solid rgba(0,0,0,.3);
+      border-top-color: #000; border-radius: 50%;
       animation: spin .7s linear infinite;
-      display: inline-block;
-      vertical-align: middle;
-      margin-right: 6px;
+      display: inline-block; vertical-align: middle; margin-right: 6px;
     }
 
-    /* ── Responsive ── */
     @media (max-width: 560px) {
       .form-grid { grid-template-columns: 1fr; }
       .form-grid .full { grid-column: 1; }
+      .film-row-title { font-size: 14px; }
     }
   </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════ HEADER -->
 <header class="admin-header">
   <div class="admin-logo">MELVILLE <span>Admin</span></div>
   <div class="admin-header-right">
@@ -305,7 +235,7 @@
   </div>
 </header>
 
-<!-- ═══════════════════════════════ LOCK SCREEN -->
+<!-- Lock screen -->
 <div id="lock-screen">
   <div class="lock-icon">🔒</div>
   <div class="lock-title">Admin Login</div>
@@ -317,280 +247,233 @@
   <div class="lock-error" id="lock-error">Incorrect password. Try again.</div>
 </div>
 
-<!-- ═══════════════════════════════ ADMIN PANEL (hidden until unlocked) -->
+<!-- Admin panel -->
 <div class="admin-wrap" id="admin-panel" style="display:none;">
 
-  <!-- NOW PLAYING -->
-  <div class="section-title">Now Playing</div>
-  <div class="movie-form-card now-playing" id="form-now">
-    <div class="card-header">
-      <span class="card-badge badge-now">Now Playing</span>
-      <span class="card-header-title" id="now-header-title">—</span>
-    </div>
-    <div class="form-grid">
-      <div class="field full">
-        <label>Movie Title</label>
-        <input type="text" id="now-title" placeholder="e.g. The Bride" />
-      </div>
-      <div class="field">
-        <label>Date Range</label>
-        <input type="text" id="now-dateRange" placeholder="e.g. MAR 13–19" />
-      </div>
-      <div class="field">
-        <label>Showtime</label>
-        <input type="text" id="now-showtime" placeholder="e.g. 8:00pm nightly" />
-      </div>
-      <div class="field">
-        <label>Rating</label>
-        <select id="now-rating">
-          <option value="G">G</option>
-          <option value="PG">PG</option>
-          <option value="14A">14A</option>
-          <option value="18A">18A</option>
-          <option value="R">R</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Duration</label>
-        <input type="text" id="now-duration" placeholder="e.g. 126 min" />
-      </div>
-      <div class="field full">
-        <label>Description (1–2 sentences)</label>
-        <textarea id="now-description" rows="2" placeholder="Brief description shown under the title..."></textarea>
-      </div>
-      <div class="field full">
-        <label>YouTube Trailer ID</label>
-        <input type="text" id="now-trailerYouTubeId" placeholder="e.g. IhgcUArO3Uo" />
-        <div class="yt-preview-label">Poster &amp; background video are pulled from this YouTube video automatically.</div>
-        <div class="yt-preview-wrap" id="now-yt-preview">
-          <img id="now-yt-img" src="" alt="Trailer thumbnail" />
-        </div>
-      </div>
-      <div class="field full">
-        <label>Movie Key (URL slug — letters/numbers only, no spaces)</label>
-        <input type="text" id="now-key" placeholder="e.g. bride" />
-      </div>
-    </div>
+  <div class="section-header">
+    <div class="section-title">All Films</div>
+    <div id="status-summary" style="font-size:12px;color:var(--muted);"></div>
   </div>
 
-  <!-- COMING SOON -->
-  <div class="section-title" style="margin-top:8px;">Coming Soon</div>
-
-  <!-- Slot 1 -->
-  <div class="movie-form-card" id="form-soon-0">
-    <div class="card-header">
-      <span class="card-badge badge-soon">Coming Soon</span>
-      <span class="card-header-title" id="soon-0-header-title">Slot 1</span>
-    </div>
-    <div class="form-grid">
-      <div class="field full">
-        <label>Movie Title</label>
-        <input type="text" id="soon-0-title" placeholder="e.g. Project Hail Mary" />
-      </div>
-      <div class="field">
-        <label>Date Range</label>
-        <input type="text" id="soon-0-dateRange" placeholder="e.g. MAR 20–26" />
-      </div>
-      <div class="field">
-        <label>Showtime</label>
-        <input type="text" id="soon-0-showtime" placeholder="e.g. 7:00pm" />
-      </div>
-      <div class="field">
-        <label>Rating</label>
-        <select id="soon-0-rating">
-          <option value="G">G</option>
-          <option value="PG">PG</option>
-          <option value="14A">14A</option>
-          <option value="18A">18A</option>
-          <option value="R">R</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Duration</label>
-        <input type="text" id="soon-0-duration" placeholder="e.g. 157 min" />
-      </div>
-      <div class="field full">
-        <label>Description</label>
-        <textarea id="soon-0-description" rows="2"></textarea>
-      </div>
-      <div class="field full">
-        <label>YouTube Trailer ID</label>
-        <input type="text" id="soon-0-trailerYouTubeId" placeholder="e.g. m08TxIsFTRI" />
-        <div class="yt-preview-wrap" id="soon-0-yt-preview">
-          <img id="soon-0-yt-img" src="" alt="Trailer thumbnail" />
-        </div>
-      </div>
-      <div class="field full">
-        <label>Movie Key</label>
-        <input type="text" id="soon-0-key" placeholder="e.g. hailmary" />
-      </div>
-      <div class="field full">
-        <label>Special Note (optional)</label>
-        <input type="text" id="soon-0-specialNote" placeholder="e.g. Special Two-Week Engagement · Real D 3D" />
-        <div class="toggle-row" style="margin-top:8px;">
-          <input type="checkbox" id="soon-0-badge3D" />
-          <label for="soon-0-badge3D">Show "Real D 3D" badge on poster</label>
-        </div>
-      </div>
-    </div>
+  <div class="film-list" id="film-list">
+    <!-- populated by JS -->
   </div>
 
-  <!-- Slot 2 -->
-  <div class="movie-form-card" id="form-soon-1">
-    <div class="card-header">
-      <span class="card-badge badge-soon">Coming Soon</span>
-      <span class="card-header-title" id="soon-1-header-title">Slot 2</span>
-    </div>
-    <div class="form-grid">
-      <div class="field full">
-        <label>Movie Title</label>
-        <input type="text" id="soon-1-title" placeholder="e.g. The Super Mario Galaxy Movie" />
-      </div>
-      <div class="field">
-        <label>Date Range</label>
-        <input type="text" id="soon-1-dateRange" placeholder="e.g. APR 3–16" />
-      </div>
-      <div class="field">
-        <label>Showtime</label>
-        <input type="text" id="soon-1-showtime" placeholder="e.g. 7:00pm + 2:00pm Sat & Sun" />
-      </div>
-      <div class="field">
-        <label>Rating</label>
-        <select id="soon-1-rating">
-          <option value="G">G</option>
-          <option value="PG">PG</option>
-          <option value="14A">14A</option>
-          <option value="18A">18A</option>
-          <option value="R">R</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Duration</label>
-        <input type="text" id="soon-1-duration" placeholder="e.g. 98 min" />
-      </div>
-      <div class="field full">
-        <label>Description</label>
-        <textarea id="soon-1-description" rows="2"></textarea>
-      </div>
-      <div class="field full">
-        <label>YouTube Trailer ID</label>
-        <input type="text" id="soon-1-trailerYouTubeId" placeholder="e.g. En5QZmL5R1s" />
-        <div class="yt-preview-wrap" id="soon-1-yt-preview">
-          <img id="soon-1-yt-img" src="" alt="Trailer thumbnail" />
-        </div>
-      </div>
-      <div class="field full">
-        <label>Movie Key</label>
-        <input type="text" id="soon-1-key" placeholder="e.g. mario" />
-      </div>
-      <div class="field full">
-        <label>Special Note (optional)</label>
-        <input type="text" id="soon-1-specialNote" placeholder="e.g. Special Two-Week Engagement · Real D 3D" />
-        <div class="toggle-row" style="margin-top:8px;">
-          <input type="checkbox" id="soon-1-badge3D" />
-          <label for="soon-1-badge3D">Show "Real D 3D" badge on poster</label>
-        </div>
-      </div>
-    </div>
-  </div>
+  <button class="btn-add" id="btn-add-film">+ Add New Film</button>
 
-  <!-- spacer for fixed save bar -->
-  <div style="height:20px;"></div>
 </div>
 
-<!-- ═══════════════════════════════ SAVE BAR -->
+<!-- Save bar -->
 <div class="save-bar" id="save-bar" style="display:none;">
-  <div class="save-status" id="save-status">All changes saved.</div>
-  <button class="btn-save" id="btn-save" onclick="saveMovies()">Save &amp; Deploy</button>
+  <div class="save-status" id="save-status">Ready to save.</div>
+  <button class="btn-save" id="btn-save" onclick="saveFilms()">Save &amp; Deploy</button>
 </div>
 
-<!-- ═══════════════════════════════ SCRIPT -->
 <script>
-  // ── State ──────────────────────────────────────────────────────────────────
+  // ── State ────────────────────────────────────────────────────────
   let adminPassword = '';
-  let moviesData    = null;
+  let films = []; // working copy
 
-  // ── Lock screen ───────────────────────────────────────────────────────────
+  // ── Lock screen ──────────────────────────────────────────────────
   document.getElementById('lock-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const pw = document.getElementById('pw-input').value.trim();
     if (!pw) return;
     adminPassword = pw;
-
-    // Try to load movies.json to verify access (it's a public file)
     try {
-      await loadMovies();
+      await loadFilms();
       unlock();
     } catch (err) {
       document.getElementById('lock-error').style.display = 'block';
-      document.getElementById('lock-error').textContent = 'Could not load movie data. Check your connection.';
+      document.getElementById('lock-error').textContent = 'Could not load data. Check connection.';
     }
   });
 
   function unlock() {
-    document.getElementById('lock-screen').style.display  = 'none';
-    document.getElementById('admin-panel').style.display  = 'block';
-    document.getElementById('save-bar').style.display     = 'flex';
-    document.getElementById('lock-error').style.display   = 'none';
-    populateForm();
+    document.getElementById('lock-screen').style.display = 'none';
+    document.getElementById('admin-panel').style.display = 'block';
+    document.getElementById('save-bar').style.display    = 'flex';
+    document.getElementById('lock-error').style.display  = 'none';
+    renderFilmList();
+  }
+
+  // ── Load movies.json ─────────────────────────────────────────────
+  async function loadFilms() {
+    const res = await fetch('/movies.json?bust=' + Date.now());
+    if (!res.ok) throw new Error('Failed to fetch');
+    const data = await res.json();
+    films = (data.films || []).slice(); // flat array
+  }
+
+  // ── Film status by date ──────────────────────────────────────────
+  function getStatus(film) {
+    const today = new Date(); today.setHours(0,0,0,0);
+    const start = new Date(film.startDate + 'T00:00:00');
+    const end   = new Date(film.endDate   + 'T23:59:59');
+    if (today > end)   return 'past';
+    if (today >= start) return 'playing';
+    return 'soon';
+  }
+
+  function statusLabel(status) {
+    if (status === 'playing') return '<span class="status-badge status-playing">Now Playing</span>';
+    if (status === 'soon')    return '<span class="status-badge status-soon">Coming Soon</span>';
+    return '<span class="status-badge status-past">Past</span>';
+  }
+
+  function formatDateRange(startStr, endStr) {
+    const MO = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const s = new Date(startStr + 'T12:00:00');
+    const e = new Date(endStr   + 'T12:00:00');
+    const sm = MO[s.getMonth()].toUpperCase(), em = MO[e.getMonth()].toUpperCase();
+    return sm === em
+      ? `${sm} ${s.getDate()}–${e.getDate()}`
+      : `${sm} ${s.getDate()}–${em} ${e.getDate()}`;
+  }
+
+  // ── Render film list ─────────────────────────────────────────────
+  function renderFilmList() {
+    const list = document.getElementById('film-list');
+
+    // Sort: playing first, then upcoming by date, then past newest-first
+    const sorted = [...films].sort((a, b) => {
+      const sa = getStatus(a), sb = getStatus(b);
+      const order = { playing: 0, soon: 1, past: 2 };
+      if (order[sa] !== order[sb]) return order[sa] - order[sb];
+      return new Date(a.startDate) - new Date(b.startDate);
+    });
+
+    list.innerHTML = sorted.map((film, sortedIdx) => {
+      // find original index for edits/deletes
+      const idx = films.indexOf(film);
+      const status = getStatus(film);
+      const dateRange = film.startDate ? formatDateRange(film.startDate, film.endDate) : '—';
+      return `
+        <div class="film-row ${status === 'playing' ? 'is-playing' : ''} ${status === 'past' ? 'is-past' : ''}"
+             id="film-row-${idx}">
+          <div class="film-row-header" onclick="toggleExpand(${idx})">
+            ${statusLabel(status)}
+            <div class="film-row-info">
+              <div class="film-row-title">${esc(film.title || 'Untitled')}</div>
+              <div class="film-row-dates">${dateRange} · ${film.showtime || ''}</div>
+            </div>
+            <div class="film-row-actions" onclick="event.stopPropagation()">
+              <button class="btn-icon danger" onclick="deleteFilm(${idx})">Delete</button>
+            </div>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+          <div class="film-edit-form" id="edit-form-${idx}">
+            ${buildEditForm(film, idx)}
+          </div>
+        </div>`;
+    }).join('');
+
+    updateSummary();
     bindYtPreviews();
   }
 
-  // ── Load movies.json ──────────────────────────────────────────────────────
-  async function loadMovies() {
-    const res = await fetch('/movies.json?bust=' + Date.now());
-    if (!res.ok) throw new Error('Failed to fetch movies.json');
-    moviesData = await res.json();
+  function updateSummary() {
+    const playing = films.filter(f => getStatus(f) === 'playing').length;
+    const soon    = films.filter(f => getStatus(f) === 'soon').length;
+    const past    = films.filter(f => getStatus(f) === 'past').length;
+    document.getElementById('status-summary').textContent =
+      `${playing} playing · ${soon} coming soon · ${past} past`;
   }
 
-  // ── Populate form from moviesData ─────────────────────────────────────────
-  function populateForm() {
-    const np = moviesData.nowPlaying;
-    setVal('now-title',            np.title);
-    setVal('now-dateRange',        np.dateRange);
-    setVal('now-showtime',         np.showtime);
-    setVal('now-rating',           np.rating);
-    setVal('now-duration',         np.duration);
-    setVal('now-description',      np.description);
-    setVal('now-trailerYouTubeId', np.trailerYouTubeId);
-    setVal('now-key',              np.key);
-    updateHeader('now-header-title', np.title);
-    showYtPreview('now', np.trailerYouTubeId);
-
-    moviesData.comingSoon.forEach((m, i) => {
-      if (i > 1) return; // only 2 slots
-      setVal(`soon-${i}-title`,            m.title);
-      setVal(`soon-${i}-dateRange`,        m.dateRange);
-      setVal(`soon-${i}-showtime`,         m.showtime);
-      setVal(`soon-${i}-rating`,           m.rating);
-      setVal(`soon-${i}-duration`,         m.duration);
-      setVal(`soon-${i}-description`,      m.description);
-      setVal(`soon-${i}-trailerYouTubeId`, m.trailerYouTubeId);
-      setVal(`soon-${i}-key`,             m.key);
-      setVal(`soon-${i}-specialNote`,      m.specialNote || '');
-      document.getElementById(`soon-${i}-badge3D`).checked = !!m.badge3D;
-      updateHeader(`soon-${i}-header-title`, m.title || `Slot ${i + 1}`);
-      showYtPreview(`soon-${i}`, m.trailerYouTubeId);
-    });
+  function buildEditForm(film, idx) {
+    const ratings = ['G','PG','14A','18A','R'].map(r =>
+      `<option value="${r}" ${film.rating === r ? 'selected' : ''}>${r}</option>`
+    ).join('');
+    return `
+      <div class="form-grid">
+        <div class="field full">
+          <label>Movie Title</label>
+          <input type="text" id="f-${idx}-title" value="${esc(film.title || '')}" oninput="updateFilm(${idx},'title',this.value)" />
+        </div>
+        <div class="field">
+          <label>Start Date</label>
+          <input type="date" id="f-${idx}-startDate" value="${film.startDate || ''}" oninput="updateFilm(${idx},'startDate',this.value)" />
+        </div>
+        <div class="field">
+          <label>End Date</label>
+          <input type="date" id="f-${idx}-endDate" value="${film.endDate || ''}" oninput="updateFilm(${idx},'endDate',this.value)" />
+        </div>
+        <div class="field">
+          <label>Showtime</label>
+          <input type="text" id="f-${idx}-showtime" value="${esc(film.showtime || '')}" oninput="updateFilm(${idx},'showtime',this.value)" placeholder="e.g. 8:00pm nightly" />
+        </div>
+        <div class="field">
+          <label>Rating</label>
+          <select id="f-${idx}-rating" onchange="updateFilm(${idx},'rating',this.value)">${ratings}</select>
+        </div>
+        <div class="field">
+          <label>Duration</label>
+          <input type="text" id="f-${idx}-duration" value="${esc(film.duration || '')}" oninput="updateFilm(${idx},'duration',this.value)" placeholder="e.g. 126 min" />
+        </div>
+        <div class="field full">
+          <label>Description</label>
+          <textarea id="f-${idx}-description" oninput="updateFilm(${idx},'description',this.value)">${esc(film.description || '')}</textarea>
+        </div>
+        <div class="field full">
+          <label>YouTube Trailer ID</label>
+          <input type="text" id="f-${idx}-ytId" value="${esc(film.trailerYouTubeId || '')}" oninput="updateFilm(${idx},'trailerYouTubeId',this.value);updateYtPreview(${idx})" placeholder="e.g. IhgcUArO3Uo" />
+          <div class="yt-preview-wrap ${film.trailerYouTubeId ? 'visible' : ''}" id="yt-preview-${idx}">
+            <img id="yt-img-${idx}" src="${film.trailerYouTubeId ? 'https://img.youtube.com/vi/'+film.trailerYouTubeId+'/maxresdefault.jpg' : ''}" alt="Trailer thumbnail" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Movie Key (URL slug)</label>
+          <input type="text" id="f-${idx}-key" value="${esc(film.key || '')}" oninput="updateFilm(${idx},'key',this.value)" placeholder="e.g. bride" />
+        </div>
+        <div class="field">
+          <label>Special Note (optional)</label>
+          <input type="text" id="f-${idx}-specialNote" value="${esc(film.specialNote || '')}" oninput="updateFilm(${idx},'specialNote',this.value)" placeholder="e.g. Real D 3D · Special Engagement" />
+          <div class="toggle-row" style="margin-top:8px;">
+            <input type="checkbox" id="f-${idx}-badge3D" ${film.badge3D ? 'checked' : ''} onchange="updateFilm(${idx},'badge3D',this.checked)" />
+            <label for="f-${idx}-badge3D">Show "Real D 3D" badge on poster</label>
+          </div>
+        </div>
+      </div>`;
   }
 
-  function setVal(id, val) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.value = val || '';
+  function esc(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  function updateHeader(id, text) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = text || '—';
+  // ── Expand / collapse ────────────────────────────────────────────
+  function toggleExpand(idx) {
+    const row = document.getElementById(`film-row-${idx}`);
+    row.classList.toggle('expanded');
   }
 
-  // ── YouTube preview ────────────────────────────────────────────────────────
-  function showYtPreview(prefix, ytId) {
-    const wrap = document.getElementById(`${prefix}-yt-preview`);
-    const img  = document.getElementById(`${prefix}-yt-img`);
+  // ── Update film field ────────────────────────────────────────────
+  function updateFilm(idx, field, value) {
+    films[idx][field] = value;
+    // Re-render the row header to reflect date/title changes
+    const row = document.getElementById(`film-row-${idx}`);
+    if (!row) return;
+    const status = getStatus(films[idx]);
+    const dateRange = films[idx].startDate ? formatDateRange(films[idx].startDate, films[idx].endDate) : '—';
+    const titleEl = row.querySelector('.film-row-title');
+    const datesEl = row.querySelector('.film-row-dates');
+    const badgeEl = row.querySelector('.status-badge').parentElement;
+    if (titleEl) titleEl.textContent = films[idx].title || 'Untitled';
+    if (datesEl) datesEl.textContent = `${dateRange} · ${films[idx].showtime || ''}`;
+    // Update playing state
+    row.classList.toggle('is-playing', status === 'playing');
+    row.classList.toggle('is-past',    status === 'past');
+    updateSummary();
+  }
+
+  // ── YouTube preview ──────────────────────────────────────────────
+  function updateYtPreview(idx) {
+    const ytId = films[idx].trailerYouTubeId || '';
+    const wrap = document.getElementById(`yt-preview-${idx}`);
+    const img  = document.getElementById(`yt-img-${idx}`);
     if (!wrap || !img) return;
-    if (ytId && ytId.trim().length > 5) {
+    if (ytId.trim().length > 5) {
       img.src = `https://img.youtube.com/vi/${ytId.trim()}/maxresdefault.jpg`;
       wrap.classList.add('visible');
     } else {
@@ -599,111 +482,81 @@
   }
 
   function bindYtPreviews() {
-    const pairs = [
-      ['now-trailerYouTubeId',    'now'],
-      ['soon-0-trailerYouTubeId', 'soon-0'],
-      ['soon-1-trailerYouTubeId', 'soon-1'],
-    ];
-    pairs.forEach(([inputId, prefix]) => {
-      const el = document.getElementById(inputId);
-      if (!el) return;
-      el.addEventListener('input', () => showYtPreview(prefix, el.value));
-    });
-
-    // Live-update card header titles
-    ['now-title', 'soon-0-title', 'soon-1-title'].forEach(id => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      const headerId = id === 'now-title' ? 'now-header-title'
-                     : id === 'soon-0-title' ? 'soon-0-header-title'
-                     : 'soon-1-header-title';
-      el.addEventListener('input', () => updateHeader(headerId, el.value));
-    });
+    // Already handled via oninput in the form HTML
   }
 
-  // ── Collect form → JSON ────────────────────────────────────────────────────
-  function collectMovies() {
-    return {
-      nowPlaying: {
-        key:              getVal('now-key'),
-        title:            getVal('now-title'),
-        dateRange:        getVal('now-dateRange'),
-        showtime:         getVal('now-showtime'),
-        rating:           getVal('now-rating'),
-        duration:         getVal('now-duration'),
-        description:      getVal('now-description'),
-        trailerYouTubeId: getVal('now-trailerYouTubeId'),
-        posterUrl:        '',
-        badge3D:          false,
-        specialNote:      '',
-      },
-      comingSoon: [0, 1].map(i => ({
-        key:              getVal(`soon-${i}-key`),
-        title:            getVal(`soon-${i}-title`),
-        dateRange:        getVal(`soon-${i}-dateRange`),
-        showtime:         getVal(`soon-${i}-showtime`),
-        rating:           getVal(`soon-${i}-rating`),
-        duration:         getVal(`soon-${i}-duration`),
-        description:      getVal(`soon-${i}-description`),
-        trailerYouTubeId: getVal(`soon-${i}-trailerYouTubeId`),
-        trailerStartSeconds: 0,
-        posterUrl:        '',
-        badge3D:          document.getElementById(`soon-${i}-badge3D`).checked,
-        specialNote:      getVal(`soon-${i}-specialNote`),
-      })),
+  // ── Delete film ──────────────────────────────────────────────────
+  function deleteFilm(idx) {
+    const title = films[idx].title || 'this film';
+    if (!confirm(`Delete "${title}"? This cannot be undone until you Save & Deploy.`)) return;
+    films.splice(idx, 1);
+    renderFilmList();
+    setStatus('Film removed. Click Save & Deploy to apply.', '');
+  }
+
+  // ── Add new film ─────────────────────────────────────────────────
+  document.getElementById('btn-add-film').addEventListener('click', () => {
+    const newFilm = {
+      key: '', title: '',
+      startDate: '', endDate: '',
+      showtime: '8:00pm nightly',
+      rating: 'G', duration: '',
+      description: '', trailerYouTubeId: '',
+      trailerStartSeconds: 0,
+      badge3D: false, specialNote: '',
     };
-  }
+    films.push(newFilm);
+    renderFilmList();
+    // Auto-expand the new film
+    const newIdx = films.length - 1;
+    const row = document.getElementById(`film-row-${newIdx}`);
+    if (row) {
+      row.classList.add('expanded');
+      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    setStatus('New film added. Fill in the details, then Save & Deploy.', '');
+  });
 
-  function getVal(id) {
-    const el = document.getElementById(id);
-    return el ? el.value.trim() : '';
-  }
-
-  // ── Save & Deploy ─────────────────────────────────────────────────────────
-  async function saveMovies() {
-    const btn    = document.getElementById('btn-save');
-    const status = document.getElementById('save-status');
-
+  // ── Save & Deploy ────────────────────────────────────────────────
+  async function saveFilms() {
+    const btn = document.getElementById('btn-save');
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span>Saving…';
-    status.className = 'save-status';
-    status.textContent = 'Sending to server…';
-
-    const movies = collectMovies();
+    setStatus('Sending to server…', '');
 
     try {
       const res = await fetch('/api/update-movies', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: adminPassword, movies }),
+        body: JSON.stringify({ password: adminPassword, movies: { films } }),
       });
-
       const data = await res.json();
 
       if (res.ok && data.ok) {
-        status.className = 'save-status success';
-        status.textContent = '✓ Saved! Site will update in ~30 seconds.';
-        moviesData = movies;
+        setStatus('✓ Saved! Site will update in ~30 seconds.', 'success');
       } else {
-        status.className = 'save-status error';
-        status.textContent = '✗ Error: ' + (data.error || 'Unknown error');
+        setStatus('✗ Error: ' + (data.error || 'Unknown error'), 'error');
         if (res.status === 401) {
-          // Wrong password — kick back to lock screen
           adminPassword = '';
           document.getElementById('lock-screen').style.display  = 'flex';
           document.getElementById('admin-panel').style.display  = 'none';
           document.getElementById('save-bar').style.display     = 'none';
           document.getElementById('lock-error').style.display   = 'block';
-          document.getElementById('lock-error').textContent     = 'Session expired or incorrect password.';
+          document.getElementById('lock-error').textContent     = 'Session expired. Please log in again.';
         }
       }
     } catch (err) {
-      status.className = 'save-status error';
-      status.textContent = '✗ Network error: ' + err.message;
+      setStatus('✗ Network error: ' + err.message, 'error');
     } finally {
       btn.disabled = false;
       btn.innerHTML = 'Save &amp; Deploy';
     }
+  }
+
+  function setStatus(msg, cls) {
+    const el = document.getElementById('save-status');
+    el.textContent = msg;
+    el.className = 'save-status' + (cls ? ' ' + cls : '');
   }
 </script>
 </body>

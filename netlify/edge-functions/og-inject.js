@@ -1,55 +1,48 @@
 // Netlify Edge Function — og-inject
-// Intercepts requests to /?movie=KEY and replaces the default
-// OG / Twitter meta tags with movie-specific values from movies.json.
+// Intercepts /?movie=KEY and injects movie-specific OG meta tags.
+// Movie status (Now Playing / Coming Soon) is determined by today's date.
 
 export default async (request, context) => {
   const url      = new URL(request.url);
   const movieKey = url.searchParams.get('movie');
-
-  // No ?movie= param → serve page as-is
   if (!movieKey) return context.next();
 
-  // ── Fetch movies.json from the same origin ────────────────────────────────
-  // The edge function runs before the response, so we fetch the JSON
-  // file from the same site (absolute URL using the request's origin).
   let meta;
   try {
-    const jsonUrl = `${url.origin}/movies.json`;
-    const jsonRes = await fetch(jsonUrl);
+    const jsonRes = await fetch(`${url.origin}/movies.json`);
     if (jsonRes.ok) {
-      const data = await jsonRes.json();
+      const data  = await jsonRes.json();
+      const today = new Date();
 
-      // Build a flat lookup: key → OG data
-      const lookup = {};
+      const film = (data.films || []).find(f => f.key === movieKey);
+      if (film) {
+        const start   = new Date(film.startDate + 'T00:00:00');
+        const end     = new Date(film.endDate   + 'T23:59:59');
+        const playing = today >= start && today <= end;
+        const status  = playing ? 'Now Playing' : 'Coming Soon';
 
-      const np = data.nowPlaying;
-      if (np && np.key) {
-        lookup[np.key] = {
-          title:       `Now Playing: ${np.title} — Melville Theatre`,
-          description: `${np.dateRange} · ${np.showtime} · ${np.rating} · ${np.duration} · Melville Theatre, Melville SK`,
-          image:       `https://img.youtube.com/vi/${np.trailerYouTubeId}/maxresdefault.jpg`,
+        // Build date range string e.g. "MAR 13–19"
+        const MO = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+        const s  = new Date(film.startDate + 'T12:00:00');
+        const e  = new Date(film.endDate   + 'T12:00:00');
+        const sm = MO[s.getMonth()], em = MO[e.getMonth()];
+        const dateRange = sm === em
+          ? `${sm} ${s.getDate()}–${e.getDate()}`
+          : `${sm} ${s.getDate()}–${em} ${e.getDate()}`;
+
+        const extra = film.specialNote ? ` · ${film.specialNote}` : '';
+
+        meta = {
+          title:       `${status}: ${film.title} — Melville Theatre`,
+          description: `${dateRange} · ${film.showtime} · ${film.rating} · ${film.duration}${extra} · Melville Theatre, Melville SK`,
+          image:       `https://img.youtube.com/vi/${film.trailerYouTubeId}/maxresdefault.jpg`,
         };
       }
-
-      (data.comingSoon || []).forEach(m => {
-        if (!m.key) return;
-        lookup[m.key] = {
-          title:       `Coming Soon: ${m.title} — Melville Theatre`,
-          description: `${m.dateRange} · ${m.showtime} · ${m.rating} · ${m.duration}${m.specialNote ? ' · ' + m.specialNote : ''} · Melville Theatre, Melville SK`,
-          image:       `https://img.youtube.com/vi/${m.trailerYouTubeId}/maxresdefault.jpg`,
-        };
-      });
-
-      meta = lookup[movieKey];
     }
-  } catch (_) {
-    // If we can't fetch the JSON, fall through to default page
-  }
+  } catch (_) { /* fall through */ }
 
-  // Unknown movie key → serve page as-is (default OG tags remain)
   if (!meta) return context.next();
 
-  // ── Fetch the HTML response, then inject movie-specific OG tags ───────────
   const response = await context.next();
   let html = await response.text();
 
@@ -61,10 +54,7 @@ export default async (request, context) => {
     .replace(/(<meta name="twitter:description"\s+content=")[^"]*(")/,  `$1${meta.description}$2`)
     .replace(/(<meta name="twitter:image"\s+content=")[^"]*(")/,       `$1${meta.image}$2`);
 
-  return new Response(html, {
-    status:  response.status,
-    headers: response.headers,
-  });
+  return new Response(html, { status: response.status, headers: response.headers });
 };
 
 export const config = { path: '/' };

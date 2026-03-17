@@ -1,43 +1,44 @@
 {
-  "nowPlaying": {
-    "key": "bride",
-    "title": "The Bride",
-    "dateRange": "MAR 13–19",
-    "showtime": "8:00pm nightly",
-    "rating": "14A",
-    "duration": "157 min",
-    "description": "Period romantic horror starring Jessie Buckley and Jake Gyllenhaal.",
-    "trailerYouTubeId": "IhgcUArO3Uo",
-    "posterUrl": "",
-    "badge3D": false,
-    "specialNote": ""
-  },
-  "comingSoon": [
+  "films": [
+    {
+      "key": "bride",
+      "title": "The Bride",
+      "startDate": "2026-03-13",
+      "endDate": "2026-03-19",
+      "showtime": "8:00pm nightly",
+      "rating": "14A",
+      "duration": "126 min",
+      "description": "Period romantic horror starring Jessie Buckley and Jake Gyllenhaal.",
+      "trailerYouTubeId": "IhgcUArO3Uo",
+      "trailerStartSeconds": 0,
+      "badge3D": false,
+      "specialNote": ""
+    },
     {
       "key": "hailmary",
       "title": "Project Hail Mary",
-      "dateRange": "MAR 20–26",
+      "startDate": "2026-03-20",
+      "endDate": "2026-03-26",
       "showtime": "7:00pm",
       "rating": "G",
       "duration": "157 min",
       "description": "Science fiction thriller starring Ryan Gosling.",
       "trailerYouTubeId": "m08TxIsFTRI",
       "trailerStartSeconds": 1,
-      "posterUrl": "",
       "badge3D": false,
       "specialNote": ""
     },
     {
       "key": "mario",
       "title": "The Super Mario Galaxy Movie",
-      "dateRange": "APR 3–16",
+      "startDate": "2026-04-03",
+      "endDate": "2026-04-16",
       "showtime": "7:00pm + 2:00pm Sat & Sun",
       "rating": "G",
       "duration": "98 min",
       "description": "The beloved plumber returns in an all-new galaxy-spanning adventure.",
       "trailerYouTubeId": "En5QZmL5R1s",
       "trailerStartSeconds": 0,
-      "posterUrl": "",
       "badge3D": true,
       "specialNote": "Special Two-Week Engagement · Real D 3D"
     }

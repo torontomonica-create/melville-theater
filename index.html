@@ -1920,15 +1920,39 @@
     // Store movie data globally so share buttons can look up by key
     window._moviesData = null;
 
-    // Share by key — avoids putting arbitrary strings in onclick attributes
+    // Share by key — looks up film from global films array
     function shareMovieByKey(key) {
-      const data = window._moviesData;
-      if (!data) return;
-      const m = (key === (data.nowPlaying && data.nowPlaying.key))
-        ? data.nowPlaying
-        : (data.comingSoon || []).find(c => c.key === key);
+      const films = (window._moviesData && window._moviesData.films) || [];
+      const m = films.find(f => f.key === key);
       if (!m) return;
-      shareMovie(m.title, m.dateRange, m.showtime, m.rating, m.duration, m.key);
+      const dateRange = formatDateRange(m.startDate, m.endDate);
+      shareMovie(m.title, dateRange, m.showtime, m.rating, m.duration, m.key);
+    }
+
+    // Format "2026-03-13" + "2026-03-19" → "MAR 13–19"
+    function formatDateRange(startStr, endStr) {
+      const MO = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+      const s = new Date(startStr + 'T12:00:00');
+      const e = new Date(endStr   + 'T12:00:00');
+      const sm = MO[s.getMonth()], em = MO[e.getMonth()];
+      return sm === em
+        ? `${sm} ${s.getDate()}–${e.getDate()}`
+        : `${sm} ${s.getDate()}–${em} ${e.getDate()}`;
+    }
+
+    // Classify films by today's date
+    function classifyFilms(films) {
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const nowPlaying = films.find(f => {
+        const start = new Date(f.startDate + 'T00:00:00');
+        const end   = new Date(f.endDate   + 'T23:59:59');
+        return today >= start && today <= end;
+      }) || null;
+      const comingSoon = films
+        .filter(f => new Date(f.startDate + 'T00:00:00') > today)
+        .sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
+        .slice(0, 2);
+      return { nowPlaying, comingSoon };
     }
 
     function esc(s) {
@@ -1936,7 +1960,8 @@
     }
 
     function buildHeroHTML(m) {
-      const ytId       = m.trailerYouTubeId;
+      const ytId      = m.trailerYouTubeId;
+      const dateRange = formatDateRange(m.startDate, m.endDate);
       const trailerSrc = `https://www.youtube.com/embed/${ytId}?autoplay=1&mute=1&loop=1&playlist=${ytId}&controls=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1`;
       const posterUrl  = `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
       return `
@@ -1955,7 +1980,7 @@
           </div>
           <h1 class="hero-title">${esc(m.title)}</h1>
           <div class="hero-date-block">
-            <span class="hero-date-range">${esc(m.dateRange)}</span>
+            <span class="hero-date-range">${esc(dateRange)}</span>
             <span class="hero-date-time">${esc(m.showtime)}</span>
           </div>
           <p class="hero-desc">${esc(m.description)}</p>
@@ -1974,7 +1999,8 @@
 
     function buildCardHTML(m, delay) {
       const ytId      = m.trailerYouTubeId;
-      const start     = m.trailerStartSeconds > 0 ? `?start=${m.trailerStartSeconds}` : '';
+      const dateRange = formatDateRange(m.startDate, m.endDate);
+      const startSec  = m.trailerStartSeconds > 0 ? `?start=${m.trailerStartSeconds}` : '';
       const posterImg = `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
       const badge3d   = m.badge3D ? `<div class="badge-3d">Real D 3D</div>` : '';
       const note      = m.specialNote ? `<div class="card-note">${esc(m.specialNote)}</div>` : '';
@@ -1986,7 +2012,7 @@
           </div>
           <div class="card-body">
             <div class="card-date-bar">
-              <span class="card-date-range">${esc(m.dateRange)}</span>
+              <span class="card-date-range">${esc(dateRange)}</span>
               <span class="card-date-time">${esc(m.showtime)}</span>
             </div>
             <div class="card-title">${esc(m.title)}</div>
@@ -2010,48 +2036,6 @@
         </div>`;
     }
 
-    function parseDateRangeStart(dateRange) {
-      // e.g. "MAR 20–26" → picks first part "MAR 20"
-      const months = { JAN:0,FEB:1,MAR:2,APR:3,MAY:4,JUN:5,JUL:6,AUG:7,SEP:8,OCT:9,NOV:10,DEC:11 };
-      const m = dateRange.toUpperCase().match(/([A-Z]+)\s+(\d+)/);
-      if (!m) return null;
-      const d = new Date(); d.setHours(0,0,0,0);
-      d.setMonth(months[m[1]]); d.setDate(parseInt(m[2], 10));
-      return d;
-    }
-    function parseDateRangeEnd(dateRange) {
-      // e.g. "MAR 20–26" or "APR 3–16"
-      const months = { JAN:0,FEB:1,MAR:2,APR:3,MAY:4,JUN:5,JUL:6,AUG:7,SEP:8,OCT:9,NOV:10,DEC:11 };
-      const m = dateRange.toUpperCase().match(/([A-Z]+)\s+\d+[–\-](\d+)/);
-      const ms = dateRange.toUpperCase().match(/([A-Z]+)/);
-      if (!m || !ms) return null;
-      const d = new Date(); d.setHours(0,0,0,0);
-      d.setMonth(months[ms[1]]); d.setDate(parseInt(m[2], 10));
-      return d;
-    }
-
-    function initDateBadges(movies) {
-      const today = new Date(); today.setHours(0,0,0,0);
-      (movies.comingSoon || []).forEach(m => {
-        const card = document.getElementById(`card-${m.key}`);
-        if (!card) return;
-        const start = parseDateRangeStart(m.dateRange);
-        const end   = parseDateRangeEnd(m.dateRange);
-        if (start && end && today >= start && today <= end) {
-          const b = document.createElement('div');
-          Object.assign(b.style, {
-            position:'absolute', top:'10px', left:'10px',
-            background:'#F5A623', color:'#000',
-            fontSize:'10px', fontWeight:'700',
-            letterSpacing:'1.5px', textTransform:'uppercase',
-            padding:'3px 8px', borderRadius:'2px',
-          });
-          b.textContent = 'Now Playing';
-          card.querySelector('.poster').appendChild(b);
-        }
-      });
-    }
-
     async function renderMovies() {
       try {
         const res = await fetch('/movies.json?bust=' + Date.now());
@@ -2059,29 +2043,41 @@
         const data = await res.json();
         window._moviesData = data;
 
-        // Hero
+        const { nowPlaying, comingSoon } = classifyFilms(data.films || []);
+
+        // Hero — Now Playing
         const hero = document.getElementById('hero');
-        if (hero && data.nowPlaying) {
-          hero.innerHTML = buildHeroHTML(data.nowPlaying);
+        if (hero) {
+          if (nowPlaying) {
+            hero.innerHTML = buildHeroHTML(nowPlaying);
+          } else {
+            // Nothing showing this week
+            hero.innerHTML = `
+              <div class="hero-overlay" style="background:rgba(10,7,4,0.7)"></div>
+              <div class="hero-content page-wrap">
+                <div class="hero-eyebrow"><span class="badge-now" style="background:#555;color:#ccc;">No Film This Week</span></div>
+                <h1 class="hero-title" style="font-size:clamp(36px,8vw,72px);">Check back soon.</h1>
+                <p class="hero-desc">The next screening is coming up — see below for details.</p>
+              </div>`;
+          }
         }
 
         // Coming Soon cards
         const stack = document.querySelector('#coming-soon .cards-stack');
-        if (stack && data.comingSoon) {
-          const delays = [200, 350];
-          stack.innerHTML = data.comingSoon
-            .slice(0, 2)
-            .map((m, i) => buildCardHTML(m, delays[i] || 200))
-            .join('');
+        if (stack) {
+          if (comingSoon.length > 0) {
+            const delays = [200, 350];
+            stack.innerHTML = comingSoon
+              .map((m, i) => buildCardHTML(m, delays[i] || 200))
+              .join('');
+          } else {
+            stack.innerHTML = `<p style="color:var(--text-muted);padding:20px 0;">More films coming soon — stay tuned!</p>`;
+          }
         }
-
-        // Date-based "Now Playing" badge on coming soon cards
-        initDateBadges(data);
 
       } catch (e) {
         console.warn('renderMovies: could not load movies.json', e);
       } finally {
-        // Always init scroll reveal (some elements are static)
         initReveal();
       }
     }
