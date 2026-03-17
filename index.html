@@ -1348,6 +1348,59 @@
       .hero-date-range { font-size: 90px; }
       .cards-stack     { gap: 28px; }
     }
+    /* ─── Back to Top button ──────────────────────────────── */
+    .back-to-top {
+      position: fixed;
+      bottom: 28px;
+      right: 24px;
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--bg-dark);
+      color: rgba(255,255,255,0.75);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 100px;
+      padding: 10px 16px 10px 14px;
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s, color 0.2s;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .back-to-top:hover {
+      background: #111;
+      color: var(--amber-vivid);
+      border-color: rgba(228,254,0,0.3);
+    }
+
+    .back-to-top svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 599px) {
+      .back-to-top {
+        bottom: 20px;
+        right: 16px;
+        padding: 9px 13px 9px 12px;
+        font-size: 11px;
+      }
+    }
+
     /* ─── Scroll Reveal ───────────────────────────────────── */
     [data-reveal] {
       opacity: 0;
@@ -1729,6 +1782,14 @@
 
   </footer>
 
+  <!-- ══════════════════════════════ BACK TO TOP -->
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"/>
+    </svg>
+    Top
+  </button>
+
   <!-- ══════════════════════════════ TRAILER MODAL -->
   <div id="trailer-modal" class="modal" onclick="handleModalClick(event)">
     <div class="modal-inner">
@@ -1755,6 +1816,12 @@
 
     window.addEventListener('scroll', updateHeader, { passive: true });
     updateHeader();
+
+    // ─── Back to Top button ──────────────────────────────────
+    const backToTopBtn = document.getElementById('back-to-top');
+    window.addEventListener('scroll', () => {
+      backToTopBtn.classList.toggle('visible', window.scrollY > 400);
+    }, { passive: true });
 
     // ─── Trailer modal ───────────────────────────────────────
     function openTrailer(embedBase) {
@@ -1898,7 +1965,7 @@
             </button>
             <div class="share-wrap">
               <button class="btn-share btn-share-hero" onclick="shareMovieByKey('${esc(m.key)}')">
-                ${SHARE_SVG} Share
+                ${SHARE_SVG} Bring a Friend!
               </button>
             </div>
           </div>
@@ -1935,7 +2002,7 @@
               </button>
               <div class="share-wrap">
                 <button class="btn-share" onclick="shareMovieByKey('${esc(m.key)}')">
-                  ${SHARE_SVG} Share
+                  ${SHARE_SVG} Bring a Friend!
                 </button>
               </div>
             </div>
