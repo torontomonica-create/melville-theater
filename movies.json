@@ -3,7 +3,7 @@
     {
       "key": "hailmary",
       "title": "Project Hail Mary",
-      "startDate": "2026-03-17",
+      "startDate": "2026-03-20",
       "endDate": "2026-03-26",
       "showtime": "7:00pm",
       "rating": "G",
@@ -26,7 +26,7 @@
       "trailerYouTubeId": "En5QZmL5R1s",
       "trailerStartSeconds": 0,
       "badge3D": true,
-      "specialNote": "Special Two-Week Engagement · Real D 3D"
+      "specialNote": "Special Two-Week Engagement"
     },
     {
       "key": "reminders",
@@ -41,6 +41,20 @@
       "trailerStartSeconds": 0,
       "badge3D": false,
       "specialNote": "Friday through Tuesday only!"
+    },
+    {
+      "key": "bride",
+      "title": "The Bride",
+      "startDate": "2026-03-13",
+      "endDate": "2026-03-19",
+      "showtime": "8:00pm ",
+      "rating": "14A",
+      "duration": "126 min",
+      "description": "A lonely Frankenstein travels to 1930s Chicago to seek the aid of Dr. Euphronius in creating a companion for himself. The two reinvigorate a murdered young woman and the Bride is born. Period romantic horror starring Jessie Buckley and Jake Gyllenhaal.",
+      "trailerYouTubeId": "IhgcUArO3Uo",
+      "trailerStartSeconds": 0,
+      "badge3D": false,
+      "specialNote": ""
     }
   ]
 }
