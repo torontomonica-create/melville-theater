@@ -6,6 +6,22 @@
 
 const MO = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
 
+// A film's link name. Use the typed key if there is one, otherwise make it from the title.
+const slugify = (t) => String(t || '').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+  .replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'film';
+function ensureKeys(films) {
+  const used = new Set();
+  films.forEach(f => {
+    let k = String(f.key || '').trim() || slugify(f.title);
+    if (typeof f.title === 'string') f.title = f.title.trim();
+    let base = k, n = 2;
+    while (used.has(k)) k = base + '-' + (n++);
+    used.add(k);
+    f.key = k;
+  });
+  return films;
+}
+
 const escAttr = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 export default async (request, context) => {
@@ -17,7 +33,7 @@ export default async (request, context) => {
     const jsonRes = await fetch(`${url.origin}/movies.json`);
     if (jsonRes.ok) {
       const data  = await jsonRes.json();
-      const films = data.films || [];
+      const films = ensureKeys(data.films || []);
       const today = new Date();
       const isPlaying = (f) =>
         today >= new Date(f.startDate + 'T00:00:00') && today <= new Date(f.endDate + 'T23:59:59');

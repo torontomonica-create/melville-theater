@@ -269,6 +269,21 @@
 
 <script>
   // ── State ────────────────────────────────────────────────────────
+  // A film's link name. Use the typed key if there is one, otherwise make it from the title.
+  const slugify = (t) => String(t || '').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'film';
+  function ensureKeys(films) {
+    const used = new Set();
+    films.forEach(f => {
+      let k = String(f.key || '').trim() || slugify(f.title);
+    if (typeof f.title === 'string') f.title = f.title.trim();
+      let base = k, n = 2;
+      while (used.has(k)) k = base + '-' + (n++);
+      used.add(k);
+      f.key = k;
+    });
+    return films;
+  }
   let adminPassword = '';
   let films = []; // working copy
 
@@ -444,7 +459,7 @@
         </div>
         <div class="field">
           <label>Movie Key (URL slug)</label>
-          <input type="text" id="f-${idx}-key" value="${esc(film.key || '')}" oninput="updateFilm(${idx},'key',this.value)" placeholder="e.g. bride" />
+          <input type="text" id="f-${idx}-key" value="${esc(film.key || '')}" oninput="updateFilm(${idx},'key',this.value)" placeholder="Leave empty: made from the title" />
         </div>
         <div class="field">
           <label>Special Note (optional)</label>
@@ -545,7 +560,7 @@
       const res = await fetch('/api/update-movies', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: adminPassword, movies: { films: films.filter(f => getStatus(f) !== 'past') } }),
+        body: JSON.stringify({ password: adminPassword, movies: { films: ensureKeys(films.filter(f => getStatus(f) !== 'past')) } }),
       });
       const data = await res.json();
 
