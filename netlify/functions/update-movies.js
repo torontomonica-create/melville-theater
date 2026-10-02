@@ -23,15 +23,22 @@ export default async (req, context) => {
     return json({ error: 'Invalid JSON body' }, 400);
   }
 
-  const { password, movies } = body;
+  const { password, movies, verifyOnly } = body;
 
   // ── 1. Verify admin password ──────────────────────────────────────────────
   const ADMIN_PASSWORD = Netlify.env.get('ADMIN_PASSWORD');
   if (!ADMIN_PASSWORD) {
     return json({ error: 'Server misconfigured: ADMIN_PASSWORD env var not set' }, 500);
   }
-  if (password !== ADMIN_PASSWORD) {
+  // Trim both sides: a stray space or newline in the Netlify env var (or in what was typed)
+  // must not lock the owner out.
+  if (typeof password !== 'string' || password.trim() !== ADMIN_PASSWORD.trim()) {
     return json({ error: 'Incorrect password' }, 401);
+  }
+
+  // Login check only: password is correct, nothing is saved.
+  if (verifyOnly) {
+    return json({ ok: true, verified: true });
   }
 
   // ── 2. Validate payload ───────────────────────────────────────────────────

@@ -278,12 +278,34 @@
     const pw = document.getElementById('pw-input').value.trim();
     if (!pw) return;
     adminPassword = pw;
+    const lockErr = document.getElementById('lock-error');
     try {
+      // Check the password with the server first, so a wrong one is caught here.
+      const check = await fetch('/api/update-movies', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: adminPassword, verifyOnly: true }),
+      });
+      if (check.status === 401) {
+        adminPassword = '';
+        lockErr.style.display = 'block';
+        lockErr.textContent = 'Incorrect password. Try again.';
+        return;
+      }
+      if (!check.ok) {
+        let msg = 'The server could not check the password.';
+        try { const d = await check.json(); if (d.error) msg = d.error; } catch (_) {}
+        adminPassword = '';
+        lockErr.style.display = 'block';
+        lockErr.textContent = msg;
+        return;
+      }
       await loadFilms();
       unlock();
     } catch (err) {
-      document.getElementById('lock-error').style.display = 'block';
-      document.getElementById('lock-error').textContent = 'Could not load data. Check connection.';
+      adminPassword = '';
+      lockErr.style.display = 'block';
+      lockErr.textContent = 'Could not reach the server. Check your connection.';
     }
   });
 
@@ -537,7 +559,7 @@
           document.getElementById('admin-panel').style.display  = 'none';
           document.getElementById('save-bar').style.display     = 'none';
           document.getElementById('lock-error').style.display   = 'block';
-          document.getElementById('lock-error').textContent     = 'Session expired. Please log in again.';
+          document.getElementById('lock-error').textContent     = 'The server rejected the password. Please log in again.';
         }
       }
     } catch (err) {
