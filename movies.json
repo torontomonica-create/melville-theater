@@ -1,3 +1,18 @@
 {
-  "films": []
+  "films": [
+    {
+      "key": "",
+      "title": "Forgotten Island",
+      "startDate": "2026-10-01",
+      "endDate": "2026-10-31",
+      "showtime": "8:00pm nightly",
+      "rating": "G",
+      "duration": "126m",
+      "description": "Your best friendship is worth fighting for.\n\nDreamWorks Animation, the studio that brought you unforgettable bonds between a boy and a dragon in How to Train Your Dragon, an ogre and a donkey in Shrek, and a robot and a gosling in The Wild Robot, now welcomes a dazzling and emotional story about two lifelong best friends who must come together before they drift apart in Forgotten Island.",
+      "trailerYouTubeId": "4287Q17c7hY",
+      "trailerStartSeconds": 0,
+      "badge3D": true,
+      "specialNote": ""
+    }
+  ]
 }
