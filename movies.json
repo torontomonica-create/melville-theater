@@ -41,6 +41,20 @@
       "trailerStartSeconds": 0,
       "badge3D": true,
       "specialNote": ""
+    },
+    {
+      "key": "",
+      "title": " The Cat in the Hat",
+      "startDate": "2026-10-19",
+      "endDate": "2026-11-06",
+      "showtime": "8:00pm nightly",
+      "rating": "G",
+      "duration": "120m",
+      "description": "Meet the Cat in the Hat you don’t know! In the wonderfully whimsical tradition of Dr. Seuss, The Cat in the Hat comes to the big screen in his animated theatrical feature film debut, an all-new, epic adventure with an edge, where mischief, magic and mayhem reign supreme.\n\nDoing what he does best, the Cat—voiced by Bill Hader—spreads joy to kids in his hilarious, signature and singularly irreverent way, transporting them and audiences on a fantastical journey through a world they’ve never seen before.",
+      "trailerYouTubeId": "jz8pLlPhSeY",
+      "trailerStartSeconds": 0,
+      "badge3D": true,
+      "specialNote": ""
     }
   ]
 }
