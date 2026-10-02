@@ -3,263 +3,312 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Melville Theatre — Admin</title>
+  <meta name="robots" content="noindex" />
+  <title>Movie Theater — Admin</title>
   <link rel="icon" href="../fav/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    input, button, select, textarea { font-family: inherit; }
 
+    /* Same colours, font and corner radius as the public site */
     :root {
-      --amber:   #e8a020;
-      --amber-d: #c07010;
-      --bg:      #0d0d0d;
-      --surface: #161616;
-      --card:    #1e1e1e;
-      --border:  #2e2e2e;
-      --text:    #e8e8e8;
-      --muted:   #888;
-      --green:   #2db37a;
-      --red:     #d94f4f;
-      --blue:    #4a9eff;
+      --amber:      #E4FE00;   /* only on dark backgrounds */
+      --amber-text: #4D5900;
+      --bg:         #EEECEB;
+      --card:       #FFFFFF;
+      --bg-alt:     #E5E3E2;
+      --field:      #F3F1F0;
+      --dark:       #161210;
+      --text:       #1C1814;
+      --muted:      #6E6459;
+      --faint:      #AEA598;
+      --ok:         #2E7D32;
+      --bad:        #B3261E;
+      --radius:     10px;
+      --font:       'Outfit', sans-serif;
     }
 
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 15px;
+      font-family: var(--font);
+      font-size: 17px;
       line-height: 1.55;
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
+    button { cursor: pointer; }
+    :focus-visible { outline: 3px solid var(--text); outline-offset: 2px; }
 
     /* ── Header ── */
     .admin-header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 16px 24px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      background: var(--dark);
+      padding: 18px 28px;
+      display: flex; align-items: center; gap: 16px;
+      position: sticky; top: 0; z-index: 100;
     }
-    .admin-logo { font-size: 18px; font-weight: 700; letter-spacing: .04em; color: var(--amber); }
-    .admin-logo span { color: var(--text); font-weight: 400; }
+    .admin-logo { font-size: 22px; font-weight: 800; letter-spacing: .06em; color: #fff; text-transform: uppercase; }
+    .admin-logo span { color: var(--amber); font-weight: 600; margin-left: 4px; }
     .admin-header-right { margin-left: auto; }
     .btn-view-site {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 7px 14px;
-      border-radius: 6px;
-      font-size: 13px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: border-color .2s, color .2s;
+      color: #fff; text-decoration: none; font-size: 16px; font-weight: 500;
+      padding: 9px 16px; border-radius: var(--radius);
+      background: rgba(255,255,255,.12); transition: background .2s;
     }
-    .btn-view-site:hover { border-color: var(--amber); color: var(--amber); }
+    .btn-view-site:hover { background: rgba(255,255,255,.22); }
 
     /* ── Layout ── */
-    .admin-wrap { max-width: 760px; margin: 0 auto; padding: 32px 20px 100px; }
+    .admin-wrap { max-width: 980px; margin: 0 auto; padding: 40px 24px 150px; }
 
     /* ── Lock screen ── */
     #lock-screen {
-      display: flex; flex-direction: column; align-items: center;
-      justify-content: center; min-height: calc(100vh - 61px);
-      gap: 20px; padding: 40px 20px;
+      display: flex; align-items: center; justify-content: center;
+      min-height: calc(100vh - 66px); padding: 32px 20px;
     }
-    .lock-icon { font-size: 48px; }
-    .lock-title { font-size: 22px; font-weight: 700; }
-    .lock-sub   { color: var(--muted); font-size: 14px; }
-    .lock-form  { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .lock-card {
+      background: var(--card); border-radius: var(--radius);
+      padding: 44px 40px; width: 100%; max-width: 460px;
+      display: flex; flex-direction: column; gap: 14px; text-align: center;
+    }
+    .lock-title { font-size: 32px; font-weight: 800; }
+    .lock-sub   { color: var(--muted); font-size: 18px; }
+    .lock-form  { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
     .lock-form input {
-      background: var(--card); border: 1px solid var(--border);
-      color: var(--text); padding: 11px 16px; border-radius: 8px;
-      font-size: 15px; width: 220px; outline: none; transition: border-color .2s;
+      background: var(--field); border: 0; color: var(--text);
+      padding: 16px 18px; border-radius: var(--radius); font-size: 20px; width: 100%;
     }
-    .lock-form input:focus { border-color: var(--amber); }
     .btn-unlock {
-      background: var(--amber); color: #000; border: none;
-      padding: 11px 24px; border-radius: 8px; font-size: 15px;
-      font-weight: 700; cursor: pointer; transition: background .2s;
+      background: var(--dark); color: var(--amber); border: 0;
+      padding: 16px 24px; border-radius: var(--radius);
+      font-size: 20px; font-weight: 700; transition: opacity .2s;
     }
-    .btn-unlock:hover { background: var(--amber-d); }
-    .lock-error { color: var(--red); font-size: 14px; display: none; }
+    .btn-unlock:hover { opacity: .88; }
+    .lock-error { color: var(--bad); font-size: 17px; font-weight: 500; display: none; }
+
+    /* ── Page title ── */
+    .page-title { font-size: clamp(34px, 5vw, 48px); font-weight: 800; line-height: 1.1; letter-spacing: -.01em; }
+    .page-sub { color: var(--muted); font-size: 18px; margin-top: 8px; max-width: 60ch; }
+
+    /* ── Summary tiles ── */
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 28px; }
+    .stat {
+      background: var(--card); border-radius: var(--radius); padding: 22px 22px 20px;
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .stat-value { font-size: 60px; font-weight: 800; line-height: 1; letter-spacing: -.02em; }
+    .stat-label { font-size: 18px; font-weight: 600; margin-top: 6px; }
+    .stat-note  { font-size: 14px; color: var(--muted); }
+    .stat.is-main { background: var(--dark); color: #fff; }
+    .stat.is-main .stat-value { color: var(--amber); }
+    .stat.is-main .stat-note { color: rgba(255,255,255,.65); }
+
+    /* ── On screen now / up next ── */
+    .onscreen {
+      background: var(--dark); color: #fff; border-radius: var(--radius);
+      margin-top: 14px; padding: 22px; display: flex; gap: 22px; align-items: center;
+    }
+    .onscreen-thumb {
+      width: 200px; aspect-ratio: 16/9; border-radius: var(--radius);
+      background: #2a2420 center/cover no-repeat; flex-shrink: 0;
+    }
+    .onscreen-body { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+    .onscreen-label { font-size: 14px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--amber); }
+    .onscreen-title { font-size: 32px; font-weight: 800; line-height: 1.15; overflow-wrap: anywhere; }
+    .onscreen-meta  { font-size: 18px; color: rgba(255,255,255,.78); }
+    .onscreen-next  { font-size: 17px; color: rgba(255,255,255,.65); margin-top: 6px; }
 
     /* ── Section title ── */
-    .section-header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 20px;
-    }
-    .section-title {
-      font-size: 11px; font-weight: 700; letter-spacing: .12em;
-      text-transform: uppercase; color: var(--amber);
-    }
+    .section-header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 44px 0 16px; }
+    .section-title { font-size: 28px; font-weight: 800; }
+    .section-note  { font-size: 16px; color: var(--muted); }
 
     /* ── Status badge ── */
     .status-badge {
-      font-size: 10px; font-weight: 700; letter-spacing: .08em;
-      text-transform: uppercase; padding: 3px 10px; border-radius: 20px;
+      font-size: 14px; font-weight: 700; letter-spacing: .04em;
+      padding: 5px 12px; border-radius: var(--radius); white-space: nowrap;
     }
-    .status-playing { background: var(--amber); color: #000; }
-    .status-soon    { background: var(--border); color: var(--muted); }
+    .status-playing { background: var(--dark); color: var(--amber); }
+    .status-soon    { background: var(--bg-alt); color: var(--muted); }
 
-    /* ── Film row ── */
-    .film-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
-
-    .film-row {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      transition: border-color .2s;
-    }
-    .film-row.is-playing { border-color: var(--amber); }
+    /* ── Film rows ── */
+    .film-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+    .film-row { background: var(--card); border-radius: var(--radius); overflow: hidden; }
+    .film-row.is-playing { box-shadow: inset 6px 0 0 var(--dark); }
 
     .film-row-header {
-      display: flex; align-items: center; gap: 12px;
-      padding: 14px 16px; cursor: pointer; user-select: none;
+      display: flex; align-items: center; gap: 16px;
+      padding: 16px 20px; cursor: pointer; user-select: none;
     }
-    .film-row-header:hover { background: rgba(255,255,255,.03); }
-
+    .film-row-header:hover { background: #FAF9F8; }
+    .film-row-thumb { width: 96px; aspect-ratio: 16/9; border-radius: 6px; background: var(--bg-alt) center/cover no-repeat; flex-shrink: 0; }
     .film-row-info { flex: 1; min-width: 0; }
-    .film-row-title { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .film-row-dates { font-size: 12px; color: var(--muted); margin-top: 2px; }
-
+    .film-row-title { font-size: 22px; font-weight: 700; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .film-row-dates { font-size: 16px; color: var(--muted); margin-top: 2px; }
     .film-row-actions { display: flex; gap: 8px; flex-shrink: 0; }
 
     .btn-icon {
-      background: transparent; border: 1px solid var(--border);
-      color: var(--muted); padding: 5px 10px; border-radius: 6px;
-      font-size: 12px; cursor: pointer; transition: all .2s; white-space: nowrap;
+      background: var(--field); border: 0; color: var(--text);
+      padding: 10px 16px; border-radius: var(--radius);
+      font-size: 16px; font-weight: 500; transition: background .2s, color .2s; white-space: nowrap;
     }
-    .btn-icon:hover { border-color: var(--text); color: var(--text); }
-    .btn-icon.danger:hover { border-color: var(--red); color: var(--red); }
-    .chevron {
-      width: 16px; height: 16px; color: var(--muted); flex-shrink: 0;
-      transition: transform .25s;
-    }
+    .btn-icon.danger:hover { background: var(--bad); color: #fff; }
+    .chevron { width: 22px; height: 22px; color: var(--muted); flex-shrink: 0; transition: transform .25s; }
     .film-row.expanded .chevron { transform: rotate(180deg); }
 
-    /* ── Edit form (inside film row) ── */
-    .film-edit-form {
-      display: none;
-      padding: 0 16px 20px;
-      border-top: 1px solid var(--border);
-    }
+    /* ── Edit form ── */
+    .film-edit-form { display: none; padding: 4px 20px 26px; background: #FAF9F8; }
     .film-row.expanded .film-edit-form { display: block; }
-
-    .form-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px;
-    }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 16px; }
     .form-grid .full { grid-column: 1 / -1; }
 
-    .field label {
-      display: block; font-size: 11px; font-weight: 600;
-      letter-spacing: .07em; text-transform: uppercase;
-      color: var(--muted); margin-bottom: 6px;
-    }
+    .field label { display: block; font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
     .field input, .field select, .field textarea {
-      width: 100%; background: var(--surface); border: 1px solid var(--border);
-      color: var(--text); padding: 9px 12px; border-radius: 8px;
-      font-size: 14px; font-family: inherit; outline: none; transition: border-color .2s;
+      width: 100%; background: #fff; border: 2px solid #E0DDDB; color: var(--text);
+      padding: 13px 14px; border-radius: var(--radius); font-size: 18px; transition: border-color .15s;
     }
-    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--amber); }
-    .field textarea { resize: vertical; min-height: 60px; }
-    .field select option { background: var(--card); }
-    .field input[type="date"] { color-scheme: dark; }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--dark); }
+    .field textarea { resize: vertical; min-height: 96px; line-height: 1.5; }
+    .field-hint { font-size: 14px; color: var(--muted); margin-top: 6px; }
 
-    /* ── YouTube preview ── */
-    .yt-preview-wrap {
-      margin-top: 8px; border-radius: 8px; overflow: hidden;
-      aspect-ratio: 16/9; background: #000; display: none;
-    }
+    .yt-preview-wrap { margin-top: 10px; border-radius: var(--radius); overflow: hidden; aspect-ratio: 16/9; max-width: 360px; background: #000; display: none; }
     .yt-preview-wrap.visible { display: block; }
     .yt-preview-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-    /* ── 3D toggle ── */
-    .toggle-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
-    .toggle-row label { font-size: 13px; color: var(--text); text-transform: none; letter-spacing: 0; font-weight: 400; cursor: pointer; margin: 0; }
-    .toggle-row input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--amber); cursor: pointer; background: transparent; border: none; padding: 0; }
+    .toggle-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+    .toggle-row label { font-size: 17px; font-weight: 400; cursor: pointer; margin: 0; }
+    .toggle-row input[type=checkbox] { width: 22px; height: 22px; accent-color: var(--dark); cursor: pointer; padding: 0; border: 0; }
 
-    /* ── Add movie button ── */
+    /* ── Add film button ── */
     .btn-add {
-      width: 100%; padding: 14px; border-radius: 12px;
-      border: 2px dashed var(--border); background: transparent;
-      color: var(--muted); font-size: 14px; font-weight: 600;
-      cursor: pointer; transition: all .2s; font-family: inherit;
+      width: 100%; padding: 20px; border-radius: var(--radius);
+      border: 0; background: var(--dark); color: var(--amber);
+      font-size: 20px; font-weight: 700; transition: opacity .2s;
     }
-    .btn-add:hover { border-color: var(--amber); color: var(--amber); }
+    .btn-add:hover { opacity: .88; }
 
     /* ── Save bar ── */
     .save-bar {
       position: fixed; bottom: 0; left: 0; right: 0;
-      background: var(--surface); border-top: 1px solid var(--border);
-      padding: 14px 24px; display: flex; align-items: center; gap: 14px; z-index: 99;
+      background: var(--dark); padding: 16px 28px;
+      display: flex; align-items: center; gap: 18px; z-index: 99;
     }
-    .save-status { font-size: 14px; color: var(--muted); flex: 1; }
-    .save-status.success { color: var(--green); }
-    .save-status.error   { color: var(--red); }
+    .save-status { font-size: 18px; color: rgba(255,255,255,.75); flex: 1; min-width: 0; }
+    .save-status.success { color: #8FE39A; }
+    .save-status.error   { color: #FF9A92; }
     .btn-save {
-      background: var(--amber); color: #000; border: none;
-      padding: 12px 28px; border-radius: 8px; font-size: 15px;
-      font-weight: 700; cursor: pointer; transition: background .2s, opacity .2s;
-      white-space: nowrap;
+      background: var(--amber); color: var(--dark); border: 0;
+      padding: 16px 34px; border-radius: var(--radius);
+      font-size: 20px; font-weight: 800; transition: opacity .2s; white-space: nowrap;
     }
-    .btn-save:hover    { background: var(--amber-d); }
+    .btn-save:hover    { opacity: .9; }
     .btn-save:disabled { opacity: .5; cursor: not-allowed; }
 
     @keyframes spin { to { transform: rotate(360deg); } }
     .spinner {
-      width: 18px; height: 18px; border: 2px solid rgba(0,0,0,.3);
-      border-top-color: #000; border-radius: 50%;
+      width: 20px; height: 20px; border: 3px solid rgba(22,18,16,.25);
+      border-top-color: var(--dark); border-radius: 50%;
       animation: spin .7s linear infinite;
-      display: inline-block; vertical-align: middle; margin-right: 6px;
+      display: inline-block; vertical-align: middle; margin-right: 8px;
     }
 
-    @media (max-width: 560px) {
+    @media (max-width: 860px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .admin-header { padding: 14px 16px; }
+      .admin-wrap { padding: 28px 16px 170px; }
       .form-grid { grid-template-columns: 1fr; }
       .form-grid .full { grid-column: 1; }
-      .film-row-title { font-size: 14px; }
+      .stat-value { font-size: 46px; }
+      .onscreen { flex-direction: column; align-items: flex-start; }
+      .onscreen-thumb { width: 100%; }
+      .onscreen-title { font-size: 26px; }
+      .film-row-header { flex-wrap: wrap; padding: 14px 16px; }
+      .film-row-thumb { width: 80px; }
+      .film-row-info { flex-basis: calc(100% - 140px); }
+      .film-row-title { white-space: normal; font-size: 20px; }
+      .save-bar { flex-direction: column; align-items: stretch; padding: 14px 16px; gap: 10px; }
+      .lock-card { padding: 32px 22px; }
     }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
   </style>
 </head>
 <body>
 
 <header class="admin-header">
-  <div class="admin-logo">MELVILLE <span>Admin</span></div>
+  <div class="admin-logo">Movie Theater <span>Admin</span></div>
   <div class="admin-header-right">
-    <a class="btn-view-site" href="/" target="_blank">View Site ↗</a>
+    <a class="btn-view-site" href="/" target="_blank" rel="noopener">View site ↗</a>
   </div>
 </header>
 
 <!-- Lock screen -->
 <div id="lock-screen">
-  <div class="lock-icon">🔒</div>
-  <div class="lock-title">Admin Login</div>
-  <div class="lock-sub">Enter the admin password to continue</div>
-  <form class="lock-form" id="lock-form">
-    <input type="password" id="pw-input" placeholder="Password" autocomplete="current-password" />
-    <button type="submit" class="btn-unlock">Unlock</button>
-  </form>
-  <div class="lock-error" id="lock-error">Incorrect password. Try again.</div>
+  <div class="lock-card">
+    <div class="lock-title">Admin login</div>
+    <div class="lock-sub">Enter the admin password to continue.</div>
+    <form class="lock-form" id="lock-form">
+      <input type="password" id="pw-input" placeholder="Password" autocomplete="current-password" aria-label="Admin password" />
+      <button type="submit" class="btn-unlock">Unlock</button>
+    </form>
+    <div class="lock-error" id="lock-error">Incorrect password. Try again.</div>
+  </div>
 </div>
 
 <!-- Admin panel -->
-<div class="admin-wrap" id="admin-panel" style="display:none;">
+<main class="admin-wrap" id="admin-panel" style="display:none;">
+
+  <h1 class="page-title">Dashboard</h1>
+  <p class="page-sub">Add, edit or remove films. After you press Save &amp; Deploy, the website updates in about 30 seconds.</p>
+
+  <section class="stats" aria-label="Film counts">
+    <div class="stat is-main">
+      <div class="stat-value" id="stat-total">0</div>
+      <div class="stat-label">Films registered</div>
+      <div class="stat-note">All films in the list</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value" id="stat-playing">0</div>
+      <div class="stat-label">Now playing</div>
+      <div class="stat-note">On screen today</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value" id="stat-soon">0</div>
+      <div class="stat-label">Coming soon</div>
+      <div class="stat-note">Start date is ahead</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value" id="stat-past">0</div>
+      <div class="stat-label">Finished</div>
+      <div class="stat-note">Cleared when you save</div>
+    </div>
+  </section>
+
+  <section class="onscreen" id="onscreen" aria-live="polite">
+    <div class="onscreen-thumb" id="onscreen-thumb"></div>
+    <div class="onscreen-body">
+      <div class="onscreen-label">On screen now</div>
+      <div class="onscreen-title" id="onscreen-title">No film this week</div>
+      <div class="onscreen-meta" id="onscreen-meta"></div>
+      <div class="onscreen-next" id="onscreen-next"></div>
+    </div>
+  </section>
 
   <div class="section-header">
-    <div class="section-title">All Films</div>
-    <div id="status-summary" style="font-size:12px;color:var(--muted);"></div>
+    <div class="section-title">All films</div>
+    <div class="section-note">Tap a film to edit it.</div>
   </div>
 
   <div class="film-list" id="film-list">
     <!-- populated by JS -->
   </div>
 
-  <button class="btn-add" id="btn-add-film">+ Add New Film</button>
+  <button class="btn-add" id="btn-add-film">+ Add new film</button>
 
-</div>
+</main>
 
 <!-- Save bar -->
 <div class="save-bar" id="save-bar" style="display:none;">
@@ -270,13 +319,13 @@
 <script>
   // ── State ────────────────────────────────────────────────────────
   // A film's link name. Use the typed key if there is one, otherwise make it from the title.
-  const slugify = (t) => String(t || '').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+  const slugify = (t) => String(t || '').toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '')
     .replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'film';
   function ensureKeys(films) {
     const used = new Set();
     films.forEach(f => {
-      let k = String(f.key || '').trim() || slugify(f.title);
-    if (typeof f.title === 'string') f.title = f.title.trim();
+      let k = slugify(String(f.key || '').trim() || f.title);
+      if (typeof f.title === 'string') f.title = f.title.trim();
       let base = k, n = 2;
       while (used.has(k)) k = base + '-' + (n++);
       used.add(k);
@@ -284,6 +333,7 @@
     });
     return films;
   }
+
   let adminPassword = '';
   let films = []; // working copy
 
@@ -337,7 +387,7 @@
     const res = await fetch('/movies.json?bust=' + Date.now());
     if (!res.ok) throw new Error('Failed to fetch');
     const data = await res.json();
-    films = (data.films || []).slice(); // flat array
+    films = ensureKeys((data.films || []).slice()); // flat array, with clean link names
   }
 
   // ── Film status by date ──────────────────────────────────────────
@@ -351,18 +401,23 @@
   }
 
   function statusLabel(status) {
-    if (status === 'playing') return '<span class="status-badge status-playing">Now Playing</span>';
-    return '<span class="status-badge status-soon">Coming Soon</span>';
+    if (status === 'playing') return '<span class="status-badge status-playing">Now playing</span>';
+    return '<span class="status-badge status-soon">Coming soon</span>';
   }
 
   function formatDateRange(startStr, endStr) {
     const MO = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     const s = new Date(startStr + 'T12:00:00');
     const e = new Date(endStr   + 'T12:00:00');
-    const sm = MO[s.getMonth()].toUpperCase(), em = MO[e.getMonth()].toUpperCase();
+    const sm = MO[s.getMonth()], em = MO[e.getMonth()];
     return sm === em
       ? `${sm} ${s.getDate()}–${e.getDate()}`
-      : `${sm} ${s.getDate()}–${em} ${e.getDate()}`;
+      : `${sm} ${s.getDate()} – ${em} ${e.getDate()}`;
+  }
+
+  function thumbUrl(film) {
+    const id = String(film.trailerYouTubeId || '').trim();
+    return id.length > 5 ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : '';
   }
 
   // ── Render film list ─────────────────────────────────────────────
@@ -383,15 +438,17 @@
       const idx = films.indexOf(film);
       const status = getStatus(film);
       const dateRange = film.startDate ? formatDateRange(film.startDate, film.endDate) : '—';
+      const th = thumbUrl(film);
       return `
         <div class="film-row ${status === 'playing' ? 'is-playing' : ''}"
              id="film-row-${idx}">
           <div class="film-row-header" onclick="toggleExpand(${idx})">
-            ${statusLabel(status)}
+            <div class="film-row-thumb" id="row-thumb-${idx}" ${th ? `style="background-image:url('${th}')"` : ''}></div>
             <div class="film-row-info">
               <div class="film-row-title">${esc(film.title || 'Untitled')}</div>
-              <div class="film-row-dates">${dateRange} · ${film.showtime || ''}</div>
+              <div class="film-row-dates">${dateRange} · ${esc(film.showtime || '')}</div>
             </div>
+            ${statusLabel(status)}
             <div class="film-row-actions" onclick="event.stopPropagation()">
               <button class="btn-icon danger" onclick="deleteFilm(${idx})">Delete</button>
             </div>
@@ -409,11 +466,51 @@
     bindYtPreviews();
   }
 
+  // ── Summary tiles + "on screen now" ──────────────────────────────
+  function daysFromToday(dateStr) {
+    const today = new Date(); today.setHours(0,0,0,0);
+    return Math.round((new Date(dateStr + 'T00:00:00') - today) / 86400000);
+  }
+
   function updateSummary() {
-    const playing = films.filter(f => getStatus(f) === 'playing').length;
-    const soon    = films.filter(f => getStatus(f) === 'soon').length;
-    document.getElementById('status-summary').textContent =
-      `${playing} playing · ${soon} coming soon`;
+    const playingFilms = films.filter(f => getStatus(f) === 'playing');
+    const soonFilms    = films.filter(f => getStatus(f) === 'soon')
+      .sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+    const pastCount    = films.filter(f => getStatus(f) === 'past').length;
+
+    document.getElementById('stat-total').textContent   = films.length;
+    document.getElementById('stat-playing').textContent = playingFilms.length;
+    document.getElementById('stat-soon').textContent    = soonFilms.length;
+    document.getElementById('stat-past').textContent    = pastCount;
+
+    const now  = playingFilms[0];
+    const next = soonFilms[0];
+    const thumb = document.getElementById('onscreen-thumb');
+    const title = document.getElementById('onscreen-title');
+    const meta  = document.getElementById('onscreen-meta');
+    const nextEl = document.getElementById('onscreen-next');
+
+    if (now) {
+      const left = daysFromToday(now.endDate);
+      const leftText = left <= 0 ? 'Last day today' : left === 1 ? 'Ends tomorrow' : `${left} days left`;
+      title.textContent = now.title || 'Untitled';
+      meta.textContent  = `${formatDateRange(now.startDate, now.endDate)} · ${now.showtime || ''} · ${leftText}`;
+      const th = thumbUrl(now);
+      thumb.style.backgroundImage = th ? `url('${th}')` : 'none';
+      thumb.style.display = th ? '' : 'none';
+    } else {
+      title.textContent = 'No film this week';
+      meta.textContent  = 'Add a film with a start date that includes today.';
+      thumb.style.display = 'none';
+    }
+
+    if (next) {
+      const d = daysFromToday(next.startDate);
+      const when = d === 1 ? 'tomorrow' : `in ${d} days`;
+      nextEl.textContent = `Up next: ${next.title || 'Untitled'}, opens ${formatDateRange(next.startDate, next.startDate).replace(/–.*/, '')} (${when})`;
+    } else {
+      nextEl.textContent = 'Nothing scheduled after this.';
+    }
   }
 
   function buildEditForm(film, idx) {
@@ -423,48 +520,49 @@
     return `
       <div class="form-grid">
         <div class="field full">
-          <label>Movie Title</label>
+          <label for="f-${idx}-title">Movie title</label>
           <input type="text" id="f-${idx}-title" value="${esc(film.title || '')}" oninput="updateFilm(${idx},'title',this.value)" />
         </div>
         <div class="field">
-          <label>Start Date</label>
+          <label for="f-${idx}-startDate">Start date</label>
           <input type="date" id="f-${idx}-startDate" value="${film.startDate || ''}" oninput="updateFilm(${idx},'startDate',this.value)" />
         </div>
         <div class="field">
-          <label>End Date</label>
+          <label for="f-${idx}-endDate">End date</label>
           <input type="date" id="f-${idx}-endDate" value="${film.endDate || ''}" oninput="updateFilm(${idx},'endDate',this.value)" />
         </div>
         <div class="field">
-          <label>Showtime</label>
+          <label for="f-${idx}-showtime">Showtime</label>
           <input type="text" id="f-${idx}-showtime" value="${esc(film.showtime || '')}" oninput="updateFilm(${idx},'showtime',this.value)" placeholder="e.g. 8:00pm nightly" />
         </div>
         <div class="field">
-          <label>Rating</label>
+          <label for="f-${idx}-rating">Rating</label>
           <select id="f-${idx}-rating" onchange="updateFilm(${idx},'rating',this.value)">${ratings}</select>
         </div>
         <div class="field">
-          <label>Duration</label>
+          <label for="f-${idx}-duration">Duration</label>
           <input type="text" id="f-${idx}-duration" value="${esc(film.duration || '')}" oninput="updateFilm(${idx},'duration',this.value)" placeholder="e.g. 126 min" />
         </div>
         <div class="field full">
-          <label>Description</label>
+          <label for="f-${idx}-description">Description</label>
           <textarea id="f-${idx}-description" oninput="updateFilm(${idx},'description',this.value)">${esc(film.description || '')}</textarea>
         </div>
         <div class="field full">
-          <label>YouTube Trailer ID</label>
+          <label for="f-${idx}-ytId">YouTube trailer ID</label>
           <input type="text" id="f-${idx}-ytId" value="${esc(film.trailerYouTubeId || '')}" oninput="updateFilm(${idx},'trailerYouTubeId',this.value);updateYtPreview(${idx})" placeholder="e.g. IhgcUArO3Uo" />
           <div class="yt-preview-wrap ${film.trailerYouTubeId ? 'visible' : ''}" id="yt-preview-${idx}">
             <img id="yt-img-${idx}" src="${film.trailerYouTubeId ? 'https://img.youtube.com/vi/'+film.trailerYouTubeId+'/maxresdefault.jpg' : ''}" alt="Trailer thumbnail" />
           </div>
         </div>
         <div class="field">
-          <label>Movie Key (URL slug)</label>
+          <label for="f-${idx}-key">Movie key (link name)</label>
           <input type="text" id="f-${idx}-key" value="${esc(film.key || '')}" oninput="updateFilm(${idx},'key',this.value)" placeholder="Leave empty: made from the title" />
+          <div class="field-hint">Used in the shared "Bring a Friend" link.</div>
         </div>
         <div class="field">
-          <label>Special Note (optional)</label>
+          <label for="f-${idx}-specialNote">Special note (optional)</label>
           <input type="text" id="f-${idx}-specialNote" value="${esc(film.specialNote || '')}" oninput="updateFilm(${idx},'specialNote',this.value)" placeholder="e.g. Real D 3D · Special Engagement" />
-          <div class="toggle-row" style="margin-top:8px;">
+          <div class="toggle-row">
             <input type="checkbox" id="f-${idx}-badge3D" ${film.badge3D ? 'checked' : ''} onchange="updateFilm(${idx},'badge3D',this.checked)" />
             <label for="f-${idx}-badge3D">Show "Real D 3D" badge on poster</label>
           </div>
@@ -492,9 +590,18 @@
     const dateRange = films[idx].startDate ? formatDateRange(films[idx].startDate, films[idx].endDate) : '—';
     const titleEl = row.querySelector('.film-row-title');
     const datesEl = row.querySelector('.film-row-dates');
-    const badgeEl = row.querySelector('.status-badge').parentElement;
+    const badgeEl = row.querySelector('.status-badge');
     if (titleEl) titleEl.textContent = films[idx].title || 'Untitled';
     if (datesEl) datesEl.textContent = `${dateRange} · ${films[idx].showtime || ''}`;
+    if (badgeEl) {
+      badgeEl.className = 'status-badge ' + (status === 'playing' ? 'status-playing' : 'status-soon');
+      badgeEl.textContent = status === 'playing' ? 'Now playing' : 'Coming soon';
+    }
+    if (field === 'trailerYouTubeId') {
+      const th = thumbUrl(films[idx]);
+      const t = document.getElementById(`row-thumb-${idx}`);
+      if (t) t.style.backgroundImage = th ? `url('${th}')` : 'none';
+    }
     row.classList.toggle('is-playing', status === 'playing');
     updateSummary();
   }

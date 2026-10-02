@@ -48,7 +48,7 @@ export default async (req, context) => {
 
   // ── 3. GitHub API — get current file SHA ─────────────────────────────────
   const GITHUB_TOKEN = Netlify.env.get('GITHUB_TOKEN');
-  const GITHUB_REPO  = Netlify.env.get('GITHUB_REPO');   // e.g. "torontomonica-create/melville-theater"
+  const GITHUB_REPO  = Netlify.env.get('GITHUB_REPO');   // e.g. "owner/repo-name"
   const GITHUB_BRANCH = Netlify.env.get('GITHUB_BRANCH') || 'main';
 
   if (!GITHUB_TOKEN || !GITHUB_REPO) {

@@ -12,7 +12,7 @@ const slugify = (t) => String(t || '').toLowerCase().normalize('NFKD').replace(/
 function ensureKeys(films) {
   const used = new Set();
   films.forEach(f => {
-    let k = String(f.key || '').trim() || slugify(f.title);
+    let k = slugify(String(f.key || '').trim() || f.title);
     if (typeof f.title === 'string') f.title = f.title.trim();
     let base = k, n = 2;
     while (used.has(k)) k = base + '-' + (n++);
@@ -63,8 +63,8 @@ export default async (request, context) => {
         }
 
         meta = {
-          title:       `${status}: ${film.title} — Melville Theatre`,
-          description: `${dateRange} · ${film.showtime} · ${film.rating} · ${film.duration}${extra} · Melville Theatre, Melville SK`,
+          title:       `${status}: ${film.title} — Movie Theater`,
+          description: `${dateRange} · ${film.showtime} · ${film.rating} · ${film.duration}${extra} · Movie Theater, Regina SK`,
           image,
           // Facebook treats og:url as the page's identity, so it must be this film's own link
           url: movieKey ? `${url.origin}/?movie=${encodeURIComponent(film.key)}` : `${url.origin}/`,
@@ -79,14 +79,18 @@ export default async (request, context) => {
   let html = await response.text();
 
   // Replacer functions (not strings) so "$" in a title can never be misread as a replacement pattern
-  const set = (re, value) => { html = html.replace(re, (_, a, b) => `${a}${escAttr(value)}${b}`); };
-  set(/(<meta property="og:title"\s+content=")[^"]*(")/,        meta.title);
-  set(/(<meta property="og:description"\s+content=")[^"]*(")/,  meta.description);
-  set(/(<meta property="og:image"\s+content=")[^"]*(")/,        meta.image);
-  set(/(<meta property="og:url"\s+content=")[^"]*(")/,          meta.url);
-  set(/(<meta name="twitter:title"\s+content=")[^"]*(")/,       meta.title);
-  set(/(<meta name="twitter:description"\s+content=")[^"]*(")/, meta.description);
-  set(/(<meta name="twitter:image"\s+content=")[^"]*(")/,       meta.image);
+  // Replace the tag if the page has it, otherwise add it to <head>
+  const set = (re, value, tag) => {
+    if (re.test(html)) html = html.replace(re, (_, a, b) => `${a}${escAttr(value)}${b}`);
+    else html = html.replace('</head>', `  ${tag}="${escAttr(value)}" />\n</head>`);
+  };
+  set(/(<meta property="og:title"\s+content=")[^"]*(")/,        meta.title, '<meta property="og:title" content');
+  set(/(<meta property="og:description"\s+content=")[^"]*(")/,  meta.description, '<meta property="og:description" content');
+  set(/(<meta property="og:image"\s+content=")[^"]*(")/,        meta.image, '<meta property="og:image" content');
+  set(/(<meta property="og:url"\s+content=")[^"]*(")/,          meta.url, '<meta property="og:url" content');
+  set(/(<meta name="twitter:title"\s+content=")[^"]*(")/,       meta.title, '<meta name="twitter:title" content');
+  set(/(<meta name="twitter:description"\s+content=")[^"]*(")/, meta.description, '<meta name="twitter:description" content');
+  set(/(<meta name="twitter:image"\s+content=")[^"]*(")/,       meta.image, '<meta name="twitter:image" content');
 
   return new Response(html, { status: response.status, headers: response.headers });
 };
