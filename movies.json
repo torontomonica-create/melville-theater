@@ -13,6 +13,20 @@
       "trailerStartSeconds": 0,
       "badge3D": true,
       "specialNote": ""
+    },
+    {
+      "key": "",
+      "title": "Hoppers",
+      "startDate": "2026-10-11",
+      "endDate": "2026-11-07",
+      "showtime": "8:00pm nightly",
+      "rating": "G",
+      "duration": "126m",
+      "description": "A 19-year-old animal lover uses technology that places her consciousness into a robotic beaver to uncover mysteries within the animal world beyond her imagination.",
+      "trailerYouTubeId": "PypDSyIRRSs",
+      "trailerStartSeconds": 0,
+      "badge3D": false,
+      "specialNote": ""
     }
   ]
 }
